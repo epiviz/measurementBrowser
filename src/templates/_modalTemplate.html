@@ -3,7 +3,7 @@
 </div>
 <div class="modal-body">
     <uib-tabset active="active">
-        <uib-tab index="$index+1" ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
+        <uib-tab index="$index+1" ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled" ng-click="loadContent()">
             <dyntable selectedrows="selectedTableRows" data="current" selectiontype="multiple"></dyntable>
         </uib-tab>
     </uib-tabset>

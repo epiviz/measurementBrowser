@@ -15,17 +15,16 @@ mControllers.controller('modalCtrl', function($scope, $uibModal, $log) {
     }
 });
 
-mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance, measurementAPI) {
+mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance, measurementAPI, $timeout) {
 
     $scope.active = 1;
     $scope.data = {};
     $scope.current = {};
+    //$scope.current.selected = [];
 
-    $scope.nextButton = true;
+    $scope.nextButton = false;
     $scope.prevButton = true;
     $scope.addSelButton = true;
-
-    $scope.selectedTableRows = [];
 
     $scope.tabs = [
         { title:'Data Provider', content:'table with data providers', id:'dataProvider', minSelection: 1},
@@ -38,9 +37,15 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         //TODO: check if user can navigate to next tab
 
         if($scope.active < $scope.tabs.length) {
+
+            $scope.tabs[$scope.active].disabled = false;
             $scope.active = $scope.active+1;
             $scope.loadContent();
         }
+
+/*        if($scope.active > 1) {
+            $scope.prevButton = true;
+        }*/
     };
 
     $scope.prevTab = function () {
@@ -49,6 +54,10 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             $scope.active = $scope.active-1;
             $scope.loadContent();
         }
+
+/*        if($scope.active < 4) {
+            $scope.nextButton = true;
+        }*/
     };
 
     $scope.AddSelected = function () {
@@ -87,27 +96,6 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         //$scope.tabs[$scope.active - 1].content = '<dynTable data="data"></dynTable>';
         //console.log($scope);
     };
-
-    $scope.$watch('current', function() {
-
-        console.log("watching scope current");
-
-        console.log($scope);
-
-        // activate next and prev tabs.
-        if($scope.current.selected !== null || $scope.current.selected.length >= $scope.tabs[$scope.active - 1].minSelection) {
-            $scope.nextButton = false;
-        }
-
-        if($scope.active > 1) {
-            $scope.prevButton = true;
-        }
-
-        if($scope.active < 4) {
-            $scope.nextButton = true;
-        }
-
-    });
 
     $scope.loadContent();
 });
