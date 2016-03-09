@@ -137,5 +137,31 @@ mServices.factory('measurementAPI', function($http) {
         }
     };
 
+    service.getChartTypes = function() {
+
+        // TODO: make actual web service calls
+
+        /*    $http.get('')
+         .then(function(response) {
+         $scope.mdataMeasurements = {}
+         });*/
+
+        return {
+            "chartTypes": [{
+                'name': 'Scatter Plot',
+                'label': 'Scatter Plot'
+            }, {
+                'name': 'HeatMap',
+                'label': 'HeatMap'
+            }, {
+                'name': 'Line Plot',
+                'label': 'Line Plot'
+            }, {
+                'name': 'Bar Plot',
+                'label': 'Bar Plot'
+            }]
+        }
+    };
+
     return service;
 });
