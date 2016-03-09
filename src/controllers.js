@@ -45,6 +45,11 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
         $scope.disNextButton = true;
         $scope.disPrevButton = false;
+
+        if($scope.active == $scope.tabs.length) {
+            $scope.disNextButton = true;
+            $scope.disAddSelButton = false;
+        }
     };
 
     $scope.prevTab = function () {
@@ -53,6 +58,11 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             $scope.active = $scope.active-1;
             $scope.loadContent();
         }
+
+        if($scope.active == 1) {
+            $scope.disPrevButton = true;
+        }
+
     };
 
     $scope.AddSelected = function () {
@@ -108,7 +118,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.disPrevButton = false;
             }
 
-            if($scope.active < 4) {
+            if($scope.active <= 4) {
                 $scope.disNextButton = false;
             }
         }
