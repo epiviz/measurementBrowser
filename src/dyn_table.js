@@ -34,8 +34,6 @@ mTable.directive('dyntable', function() {
 
             $scope.setRowSelected = function(row) {
 
-                console.log($scope);
-
                 if($scope.data.selected == null) {
                     $scope.data.selected = [];
                 }
