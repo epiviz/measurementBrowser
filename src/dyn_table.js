@@ -32,19 +32,24 @@ mTable.directive('dyntable', function() {
             // TODO: check if all browsers support keys
             $scope.headers = Object.keys($scope.data[0]);
 
+            $scope.data.selected = [];
+
             $scope.setRowSelected = function(row) {
 
                 //TODO: also add a class to highlight selected rows
 
                 if($scope.selectionType === "multiple") {
-                    $scope.selectedTableRows.push(row);
+                    //$scope.selectedTableRows.push(row);
+                    //TODO: check if row already exists
+                    $scope.data.selected.push(row);
                 }
                 else {
-                    $scope.selectedTableRows = [];
-                    $scope.selectedTableRows.push(row);
+                    //$scope.selectedTableRows = [];
+                    //$scope.selectedTableRows.push(row);
+                    $scope.data.selected = [];
+                    $scope.data.selected.push(row);
                 }
 
-                console.log($scope);
             };
         },
         link: function(scope, elem, attrs) {

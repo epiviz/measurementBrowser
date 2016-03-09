@@ -9,8 +9,8 @@
     </uib-tabset>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary disabled" type="button"  ng-click="prevTab()">Prev</button>
-    <button class="btn btn-primary disabled" type="button" ng-click="nextTab()">Next</button>
-    <button class="btn btn-primary disabled" type="button" ng-click="AddSelected()">Add to Selection</button>
+    <button class="btn btn-primary" type="button" ng-disabled="prevButton" ng-click="prevButton || prevTab()">Prev</button>
+    <button class="btn btn-primary" type="button" ng-disabled="nextButton" ng-click="nextButton || nextTab()">Next</button>
+    <button class="btn btn-primary" ng-disabled="addSelButton" type="button" ng-click="addSelButton || AddSelected()">Add to Selection</button>
     <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>

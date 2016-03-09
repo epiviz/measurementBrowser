@@ -21,6 +21,10 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.data = {};
     $scope.current = {};
 
+    $scope.nextButton = true;
+    $scope.prevButton = true;
+    $scope.addSelButton = true;
+
     $scope.selectedTableRows = [];
 
     $scope.tabs = [
@@ -83,6 +87,27 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         //$scope.tabs[$scope.active - 1].content = '<dynTable data="data"></dynTable>';
         //console.log($scope);
     };
+
+    $scope.$watch('current', function() {
+
+        console.log("watching scope current");
+
+        console.log($scope);
+
+        // activate next and prev tabs.
+        if($scope.current.selected !== null || $scope.current.selected.length >= $scope.tabs[$scope.active - 1].minSelection) {
+            $scope.nextButton = false;
+        }
+
+        if($scope.active > 1) {
+            $scope.prevButton = true;
+        }
+
+        if($scope.active < 4) {
+            $scope.nextButton = true;
+        }
+
+    });
 
     $scope.loadContent();
 });
