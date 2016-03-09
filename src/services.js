@@ -18,8 +18,6 @@ mServices.factory('measurementAPI', function($http) {
          $scope.mdataProviders = {}
          });*/
 
-        console.log("calling getDataProviders");
-
         return {
             "dataProviders": [{
                 "serverType": 'MySQL',
@@ -36,8 +34,6 @@ mServices.factory('measurementAPI', function($http) {
          .then(function(response) {
          $scope.mdataSources = {}
          });*/
-
-        console.log("calling getDataSources");
 
         return {
             "dataSources": [{
@@ -64,8 +60,6 @@ mServices.factory('measurementAPI', function($http) {
          .then(function(response) {
          $scope.mdataAnnotations = {}
          });*/
-
-        console.log("calling getDataAnnotations");
 
         return {
             "dataSource": 'Affymetrix',
@@ -117,8 +111,6 @@ mServices.factory('measurementAPI', function($http) {
          .then(function(response) {
          $scope.mdataMeasurements = {}
          });*/
-
-        console.log("calling getDataMeasurements");
 
         return {
             "dataMeasurements": [{

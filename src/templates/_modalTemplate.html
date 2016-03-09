@@ -4,13 +4,13 @@
 <div class="modal-body">
     <uib-tabset active="active">
         <uib-tab index="$index+1" ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled" ng-click="loadContent()">
-            <dyntable selectedrows="selectedTableRows" data="current" selectiontype="multiple"></dyntable>
+            <dyntable data="current" selectiontype="multiple"></dyntable>
         </uib-tab>
     </uib-tabset>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" type="button" ng-disabled="disPrevButton" ng-click="disPrevButton || prevTab()">Prev</button>
     <button class="btn btn-primary" type="button" ng-disabled="disNextButton" ng-click="disNextButton || nextTab()">Next</button>
-    <button class="btn btn-primary" ng-disabled="disAddSelButton" type="button" ng-click="disAddSelButton || AddSelected()">Add to Selection</button>
+    <button class="btn btn-primary" ng-disabled="disAddSelButton" type="button" ng-click="disAddSelButton || AddSelected()">Add Measurements</button>
     <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>

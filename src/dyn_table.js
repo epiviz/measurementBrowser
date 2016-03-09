@@ -67,7 +67,11 @@ mTable.directive('dyntable', function() {
                     return false;
                 }
                 return true;
-            }
+            };
+
+            scope.$watch('data', function() {
+                scope.headers = Object.keys(scope.data[0]);
+            }, true);
         }
     }
 });

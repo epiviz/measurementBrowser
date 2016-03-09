@@ -15,7 +15,7 @@ mControllers.controller('modalCtrl', function($scope, $uibModal, $log) {
     }
 });
 
-mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance, measurementAPI, $timeout) {
+mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance, measurementAPI, $timeout, $compile) {
 
     $scope.active = 1;
     $scope.data = {};
@@ -28,7 +28,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     $scope.tabs = [
         { title:'Data Provider', content:'table with data providers', id:'dataProvider', minSelection: 1},
-        { title:'Data Sources', content:'table with data sources', disabled: true, id:'dataSources', minSelection: 1 },
+        { title:'Data Sources', content:'table with data sources', disabled: true, id:'dataSources', minSelection: 2 },
         { title:'Annotations', content:'table with data annotations', disabled: true, id:'dataAnnotations', minSelection: 1 },
         { title:'Measurements', content:'table with data measurements', disabled: true, id:'dataMeasurements', minSelection: 1 }
     ];
@@ -88,28 +88,32 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 console.log(id);
         }
 
-        //$scope.tabs[$scope.active - 1].content = '<dynTable data="data"></dynTable>';
-        //console.log($scope);
+        //$scope.tabs[$scope.active].content = $compile('<dyntable data="current" selectiontype="multiple"></dyntable>')($scope);
+        //angular.element(document.getElementById('tabContent')).append($compile('<dyntable data="current" selectiontype="multiple"></dyntable>')($scope));
+    };
 
-        $scope.$watch(function() { return $scope.current.selected}, function(oldVal, newVal) {
+    $scope.$watch(function() { return $scope.current.selected}, function(oldVal, newVal) {
 
-            // if selection reaches the minimum required on this tab, activate next tab and enable the next button.
+        // if selection reaches the minimum required on this tab, activate next tab and enable the next button.
 
-            if($scope.current.selected.length >= $scope.tabs[$scope.active - 1].minSelection ) {
-                $scope.disNextButton = false;
-                $scope.tabs[$scope.active].disabled = false;
+        if($scope.current.selected == null) {
+            $scope.current.selected = []
+        }
 
-                if($scope.active > 1) {
-                    $scope.disPrevButton = false;
-                }
+        if($scope.current.selected.length >= $scope.tabs[$scope.active - 1].minSelection ) {
+            $scope.disNextButton = false;
+            $scope.tabs[$scope.active].disabled = false;
 
-                if($scope.active < 4) {
-                    $scope.disNextButton = false;
-                }
+            if($scope.active > 1) {
+                $scope.disPrevButton = false;
             }
 
-        }, true);
-    };
+            if($scope.active < 4) {
+                $scope.disNextButton = false;
+            }
+        }
+
+    }, true);
 
     $scope.loadContent();
 });
