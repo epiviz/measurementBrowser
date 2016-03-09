@@ -22,9 +22,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.current = {};
     //$scope.current.selected = [];
 
-    $scope.nextButton = false;
-    $scope.prevButton = true;
-    $scope.addSelButton = true;
+    $scope.disNextButton = true;
+    $scope.disPrevButton = true;
+    $scope.disAddSelButton = true;
 
     $scope.tabs = [
         { title:'Data Provider', content:'table with data providers', id:'dataProvider', minSelection: 1},
@@ -43,9 +43,8 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             $scope.loadContent();
         }
 
-/*        if($scope.active > 1) {
-            $scope.prevButton = true;
-        }*/
+        $scope.disNextButton = true;
+        $scope.disPrevButton = false;
     };
 
     $scope.prevTab = function () {
@@ -54,10 +53,6 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             $scope.active = $scope.active-1;
             $scope.loadContent();
         }
-
-/*        if($scope.active < 4) {
-            $scope.nextButton = true;
-        }*/
     };
 
     $scope.AddSelected = function () {
@@ -95,6 +90,25 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
         //$scope.tabs[$scope.active - 1].content = '<dynTable data="data"></dynTable>';
         //console.log($scope);
+
+        $scope.$watch(function() { return $scope.current.selected}, function(oldVal, newVal) {
+
+            // if selection reaches the minimum required on this tab, activate next tab and enable the next button.
+
+            if($scope.current.selected.length >= $scope.tabs[$scope.active - 1].minSelection ) {
+                $scope.disNextButton = false;
+                $scope.tabs[$scope.active].disabled = false;
+
+                if($scope.active > 1) {
+                    $scope.disPrevButton = false;
+                }
+
+                if($scope.active < 4) {
+                    $scope.disNextButton = false;
+                }
+            }
+
+        }, true);
     };
 
     $scope.loadContent();

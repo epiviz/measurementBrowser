@@ -40,8 +40,6 @@ mTable.directive('dyntable', function() {
                     $scope.data.selected = [];
                 }
 
-                //TODO: also add a class to highlight selected rows
-
                 if($scope.selectionType === "multiple") {
 
                     if(!$scope.isRowSelected(row)) {
