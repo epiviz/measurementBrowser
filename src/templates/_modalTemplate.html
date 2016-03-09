@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{title}}</h3>
+</div>
+<div class="modal-body">
+    <uib-tabset active="active">
+        <uib-tab index="$index+1" ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
+            <dyntable selectedrows="selectedTableRows" data="current" selectiontype="multiple"></dyntable>
+        </uib-tab>
+    </uib-tabset>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary disabled" type="button"  ng-click="prevTab()">Prev</button>
+    <button class="btn btn-primary disabled" type="button" ng-click="nextTab()">Next</button>
+    <button class="btn btn-primary disabled" type="button" ng-click="AddSelected()">Add to Selection</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
