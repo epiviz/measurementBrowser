@@ -27,11 +27,11 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.disAddSelButton = true;
 
     $scope.tabs = [
-        { title:'Data Provider', content:'table with data providers', id:'dataProvider', minSelection: 1},
-        { title:'Data Sources', content:'table with data sources', disabled: true, id:'dataSources', minSelection: 2 },
-        { title:'Annotations', content:'table with data annotations', disabled: true, id:'dataAnnotations', minSelection: 1 },
-        { title:'Measurements', content:'table with data measurements', disabled: true, id:'dataMeasurements', minSelection: 1},
-        { title:'Chart Type', content:'table with charts', disabled: true, id:'chartTypes', minSelection: 1}
+        { title:'Data Provider', content:'table with data providers', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_table.html'},
+        { title:'Data Sources', content:'table with data sources', disabled: true, id:'dataSources', minSelection: 2, templateURL: 'src/templates/_table.html' },
+        { title:'Annotations', content:'table with data annotations', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html' },
+        { title:'Measurements', content:'table with data measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html'},
+        { title:'Chart Type', content:'table with charts', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_table.html'}
     ];
 
     $scope.nextTab = function () {
