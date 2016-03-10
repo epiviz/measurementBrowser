@@ -26,12 +26,14 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.disPrevButton = true;
     $scope.disAddSelButton = true;
 
+
+    //can also add tabs dynamically
     $scope.tabs = [
-        { title:'Data Provider', content:'table with data providers', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'},
-        { title:'Data Sources', content:'table with data sources', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single' },
-        { title:'Annotations', content:'table with data annotations', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },
-        { title:'Measurements', content:'table with data measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple'},
-        { title:'Chart Type', content:'table with charts', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'}
+        { title:'Data Provider', content:'table with data providers', info:'', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'},
+        { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single' },
+        { title:'Annotations', content:'table with data annotations', info:'', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },
+        { title:'Measurements', content:'table with data measurements', info:'select measurements to plot', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple'},
+        { title:'Chart Type', content:'table with charts', info:'choose a chart type', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'}
     ];
 
     $scope.nextTab = function () {
@@ -79,6 +81,8 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     $scope.loadContent = function() {
         var id = $scope.tabs[$scope.active - 1].id;
+
+        //TODO: use nested tree structure for selections!
 
         switch(id) {
             case 'dataProvider':
