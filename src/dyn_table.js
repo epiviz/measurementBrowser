@@ -13,11 +13,16 @@ mTable.directive('dyntable', function() {
         template: '<table class="table table-hover">' +
         '<thead>' +
         '<tr>' +
-        '<th ng-repeat="head in headers">{{head}}</th>' +
+        '<th ng-repeat="head in headers">' +
+        '<a href="#" ng-click="$parent.sortField = head; $parent.sortReverse = !sortReverse">{{head}}' +
+        '<span ng-show="$parent.sortField == head && !$parent.sortReverse" class="glyphicon glyphicon-chevron-down"></span>' +
+        '<span ng-show="$parent.sortField == head && $parent.sortReverse" class="glyphicon glyphicon-chevron-up"></span>' +
+        '</a>' +
+        '</th>' +
         '</tr>' +
         '</thead>' +
         '<tbody>' +
-        '<tr ng-repeat="row in data" ng-class="{info: isRowSelected(row)}" ng-click="setRowSelected(row)">' +
+        '<tr ng-repeat="row in data | orderBy:sortField:sortReverse" ng-class="{info: isRowSelected(row)}" ng-click="setRowSelected(row);">' +
         '<td ng-repeat="cell in row">{{cell}}</td>' +
         '</tr>' +
         '</tbody>' +
@@ -31,6 +36,9 @@ mTable.directive('dyntable', function() {
 
             // TODO: check if all browsers support keys
             $scope.headers = Object.keys($scope.data[0]);
+
+            $scope.sortField = "";
+            $scope.sortReverse = false;
 
             $scope.setRowSelected = function(row) {
 
@@ -54,6 +62,12 @@ mTable.directive('dyntable', function() {
 
                 console.log($scope);
             };
+
+/*            $scope.setSort = function(field) {
+                $scope.sortField = field;
+                console.log(field);
+                console.log($scope);
+            };*/
         },
         link: function(scope, elem, attrs) {
 

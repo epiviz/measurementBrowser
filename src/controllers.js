@@ -31,7 +31,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.tabs = [
         { title:'Data Provider', content:'table with data providers', info:'', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'},
         { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single' },
-        { title:'Annotations', content:'table with data annotations', info:'', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },
+        { title:'Annotations', content:'table with data annotations', info:'choose columns to show for measurement', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },
         { title:'Measurements', content:'table with data measurements', info:'select measurements to plot', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple'},
         { title:'Chart Type', content:'table with charts', info:'choose a chart type', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'}
     ];
@@ -115,11 +115,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     };
 
     $scope.getSelectedDataProvider = function() {
-
-        console.log($scope.current.selected[0].serverName);
-
         return $scope.current.selected[0].serverName;
-
     };
 
     $scope.getSelectedDataSources = function() {
