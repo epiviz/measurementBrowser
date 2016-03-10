@@ -10,7 +10,16 @@ mTable.directive('dyntable', function() {
         restrict: 'E',
         transclude: true,
         replace: true,
-        template: '<table class="table table-hover">' +
+        template: '<div>' +
+        '<form class="form-inline">' +
+        '<div class="form-group pull-right">' +
+        '<div class="input-group">' +
+        '<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>' +
+        '<input type="text" class="form-control" placeholder="Search table" ng-model="searchTable">' +
+        '</div>' +
+        '</div>' +
+        '</form>' +
+        '<table class="table table-hover">' +
         '<thead>' +
         '<tr>' +
         '<th ng-repeat="head in headers">' +
@@ -22,11 +31,12 @@ mTable.directive('dyntable', function() {
         '</tr>' +
         '</thead>' +
         '<tbody>' +
-        '<tr ng-repeat="row in data | orderBy:sortField:sortReverse" ng-class="{info: isRowSelected(row)}" ng-click="setRowSelected(row);">' +
+        '<tr ng-repeat="row in data | orderBy:sortField:sortReverse | filter: searchTable" ng-class="{info: isRowSelected(row)}" ng-click="setRowSelected(row);">' +
         '<td ng-repeat="cell in row">{{cell}}</td>' +
         '</tr>' +
         '</tbody>' +
-        '</table>',
+        '</table>' +
+        '</div>',
         scope: {
             data: '=',
             selectionType: '@selectiontype',
@@ -36,6 +46,7 @@ mTable.directive('dyntable', function() {
 
             $scope.sortField = "";
             $scope.sortReverse = false;
+            $scope.searchTable = "";
 
             $scope.setRowSelected = function(row) {
 
