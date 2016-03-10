@@ -34,9 +34,6 @@ mTable.directive('dyntable', function() {
         },
         controller: function($scope) {
 
-            // TODO: check if all browsers support keys
-            $scope.headers = Object.keys($scope.data[0]);
-
             $scope.sortField = "";
             $scope.sortReverse = false;
 
@@ -77,14 +74,13 @@ mTable.directive('dyntable', function() {
                     scope.data.selected = [];
                 }
 
-                if(scope.data.selected.indexOf(row) == -1) {
-                    return false;
-                }
-                return true;
+                return scope.data.selected.indexOf(row) != -1;
+
             };
 
             scope.$watch('data', function() {
                 scope.headers = Object.keys(scope.data[0]);
+                scope.headers.splice(scope.headers.indexOf('$$hashKey'), 1);
             }, true);
         }
     }

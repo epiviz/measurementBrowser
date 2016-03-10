@@ -177,7 +177,5 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     }, true);
 
-
-
     $scope.loadContent();
 });
