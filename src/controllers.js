@@ -27,11 +27,11 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.disAddSelButton = true;
 
     $scope.tabs = [
-        { title:'Data Provider', content:'table with data providers', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_table.html'},
-        { title:'Data Sources', content:'table with data sources', disabled: true, id:'dataSources', minSelection: 2, templateURL: 'src/templates/_table.html' },
-        { title:'Annotations', content:'table with data annotations', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html' },
-        { title:'Measurements', content:'table with data measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html'},
-        { title:'Chart Type', content:'table with charts', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_table.html'}
+        { title:'Data Provider', content:'table with data providers', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'},
+        { title:'Data Sources', content:'table with data sources', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single' },
+        { title:'Annotations', content:'table with data annotations', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },
+        { title:'Measurements', content:'table with data measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple'},
+        { title:'Chart Type', content:'table with charts', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'}
     ];
 
     $scope.nextTab = function () {
@@ -51,6 +51,8 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             $scope.disNextButton = true;
             $scope.disAddSelButton = false;
         }
+
+        console.log($scope);
     };
 
     $scope.prevTab = function () {
@@ -64,6 +66,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             $scope.disPrevButton = true;
         }
 
+        console.log($scope);
     };
 
     $scope.AddSelected = function () {
@@ -83,7 +86,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.current = $scope.data.dataProvider.dataProviders;
                 break;
             case 'dataSources':
-                $scope.data.dataSources = $scope.data.dataSources ? $scope.data.dataSources : measurementAPI.getDataSources();
+                $scope.data.dataSources = $scope.data.dataSources ? $scope.data.dataSources : measurementAPI.getDataSources($scope.getSelectedDataProvider());
                 $scope.current = $scope.data.dataSources.dataSources;
                 break;
             case 'dataAnnotations':
@@ -107,9 +110,31 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         //angular.element(document.getElementById('tabContent')).append($compile('<dyntable data="current" selectiontype="multiple"></dyntable>')($scope));
     };
 
+    $scope.getSelectedDataProvider = function() {
+
+        console.log($scope.current.selected[0].serverName);
+
+        return $scope.current.selected[0].serverName;
+
+    };
+
+    $scope.getSelectedDataSources = function() {
+        return $scope.current.selected;
+    };
+
+    $scope.getSelectedDataAnnotations = function() {
+        return $scope.current.selected;
+    };
+
+    $scope.getSelectedDataMeasurements = function() {
+        return $scope.current.selected;
+    };
+
+
+
     $scope.$watch(function() { return $scope.current.selected}, function(oldVal, newVal) {
 
-        // if selection reaches the minimum required on this tab, activate next tab and enable the next button.
+        // if selection reaches the minimum required for a tab, activate next tab and enable the next button.
 
         if($scope.current.selected == null) {
             $scope.current.selected = []
@@ -128,7 +153,31 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             }
         }
 
+        var id = $scope.tabs[$scope.active - 1].id;
+
+        switch(id) {
+            case 'dataProvider':
+                $scope.data.dataSources = null;
+                break;
+            case 'dataSources':
+                $scope.data.dataAnnotations = null;
+                break;
+            case 'dataAnnotations':
+                $scope.data.dataMeasurements = null;
+                break;
+            case 'dataMeasurements':
+                $scope.data.chartTypes = null;
+                break;
+            case 'chartTypes':
+                break;
+            default:
+                console.log("Oops error loading tab");
+                console.log(id);
+        }
+
     }, true);
+
+
 
     $scope.loadContent();
 });

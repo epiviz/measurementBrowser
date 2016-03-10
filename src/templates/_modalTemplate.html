@@ -4,6 +4,7 @@
 <div class="modal-body">
     <uib-tabset active="active">
         <uib-tab index="$index+1" ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled" ng-click="loadContent()">
+            <p class="bg-info">{{tab.info}}</p>
             <ng-include src="tab.templateURL"></ng-include>
         </uib-tab>
     </uib-tabset>

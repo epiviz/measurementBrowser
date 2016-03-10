@@ -17,7 +17,7 @@ mTable.directive('dyntable', function() {
         '</tr>' +
         '</thead>' +
         '<tbody>' +
-        '<tr ng-repeat="row in data" ng-class="{active: isRowSelected(row)}" ng-click="setRowSelected(row)">' +
+        '<tr ng-repeat="row in data" ng-class="{info: isRowSelected(row)}" ng-click="setRowSelected(row)">' +
         '<td ng-repeat="cell in row">{{cell}}</td>' +
         '</tr>' +
         '</tbody>' +
@@ -51,6 +51,8 @@ mTable.directive('dyntable', function() {
                     $scope.data.selected = [];
                     $scope.data.selected.push(row);
                 }
+
+                console.log($scope);
             };
         },
         link: function(scope, elem, attrs) {

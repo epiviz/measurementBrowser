@@ -21,13 +21,19 @@ mServices.factory('measurementAPI', function($http) {
         return {
             "dataProviders": [{
                 "serverType": 'MySQL',
+                "serverName": 'EpivizUMD',
                 "url": 'http://epiviz.cbcb.umd.edu',
+                "version": '1'
+            }, {
+                "serverType": 'MySQL',
+                "serverName": 'MetavizUMD',
+                "url": 'http://metaviz.cbcb.umd.edu',
                 "version": '1'
             }]
         }
     };
 
-    service.getDataSources = function() {
+    service.getDataSources = function(dataProvider) {
         // TODO: make actual web service calls
 
         /*    $http.get('')
@@ -35,20 +41,46 @@ mServices.factory('measurementAPI', function($http) {
          $scope.mdataSources = {}
          });*/
 
-        return {
-            "dataSources": [{
-                "name": 'Affymetrix',
-                "description": 'xyz',
-                "version": '1'
-            }, {
-                "name": 'Gene Expression Barcode',
-                "description": 'xyz',
-                "version": '1'
-            }, {
-                "name": 'hyper_blocks',
-                "description": 'xyz',
-                "version": '1'
-            }]
+        switch(dataProvider) {
+            case 'EpivizUMD':
+                return {
+                    "dataSources": [{
+                        "name": 'Affymetrix',
+                        "description": 'xyz',
+                        "version": '1'
+                    }, {
+                        "name": 'Gene Expression Barcode',
+                        "description": 'xyz',
+                        "version": '1'
+                    }, {
+                        "name": 'hyper_blocks',
+                        "description": 'xyz',
+                        "version": '1'
+                    }]
+                };
+                break;
+            case 'MetavizUMD':
+                return {
+                    "dataSources": [{
+                        "name": 'meta',
+                        "description": 'xyz',
+                        "version": '3'
+                    }, {
+                        "name": 'meta',
+                        "description": 'xyz',
+                        "version": '5'
+                    }, {
+                        "name": 'meta',
+                        "description": 'xyz',
+                        "version": '2'
+                    }]
+                };
+                break;
+            default:
+                return {
+                    "error" : 'data provider does not exist'
+                };
+                break;
         }
     };
 
