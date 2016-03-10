@@ -86,7 +86,6 @@ mTable.directive('dyntable', function() {
                 }
 
                 return scope.data.selected.indexOf(row) != -1;
-
             };
 
             scope.$watch('data', function() {
