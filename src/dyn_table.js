@@ -26,6 +26,9 @@ mTable.directive('dyntable', function() {
         '</ul>' +
         '</div>' +
         '</div>' +
+        '<div class="form-group" ng-show="showFilterAvail">' +
+        '<label>No filters available</label>' +
+        '</div>' +
         '<div class="form-group" ng-show="showFilterInput">' +
         '<select class="form-control" ng-model="sel.filtOperator" ng-options="filter.name for filter in selectedFilter"></select>' +
         '<input type="text" class="form-control" placeholder="filter text" ng-model="sel.filtValue">' +
@@ -63,9 +66,17 @@ mTable.directive('dyntable', function() {
         controller: function($scope) {
 
             $scope.showFilterFields = function(item) {
-                $scope.showFilterInput = true;
-                $scope.selectedFilter = item.filter;
-                $scope.sel.filtField = item.field;
+
+                if(item.filter != null ) {
+                    $scope.showFilterInput = true;
+                    $scope.selectedFilter = item.filter;
+                    $scope.sel.filtField = item.field;
+                    $scope.showFilterAvail = false;
+                }
+                else {
+                    $scope.showFilterAvail = true;
+                    $scope.showFilterInput = false;
+                }
             };
 
         },
@@ -75,6 +86,7 @@ mTable.directive('dyntable', function() {
             scope.sortReverse = false;
             scope.searchTable = "";
             scope.showFilterMenu = false;
+            scope.showFilterInput = false;
             scope.showFilterInput = false;
             scope.filter = [];
             scope.sel = {
