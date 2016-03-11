@@ -142,6 +142,9 @@ mTable.directive('dyntable', function() {
                 if(scope.dataAnnotations != null) {
                     scope.showFilterMenu = true;
                 }
+                else {
+                    scope.showFilterMenu = false;
+                }
             }, true);
         }
     }
