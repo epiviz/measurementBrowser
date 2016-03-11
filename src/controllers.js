@@ -53,7 +53,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             $scope.disNextButton = true;
             $scope.disAddSelButton = false;
         }
-        
+
     };
 
     $scope.prevTab = function () {
