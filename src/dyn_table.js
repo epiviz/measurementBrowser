@@ -12,13 +12,31 @@ mTable.directive('dyntable', function() {
         replace: true,
         template: '<div>' +
         '<form class="form-inline">' +
-        '<div class="form-group pull-right">' +
+        '<div class="form-group">' +
         '<div class="input-group">' +
         '<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>' +
         '<input type="text" class="form-control" placeholder="Search table" ng-model="searchTable">' +
         '</div>' +
         '</div>' +
+        '<div class="form-group" ng-show="showFilterMenu">' +
+        '<div class="btn-group" uib-dropdown is-open="status.isopen">' +
+        '<button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle>Add Filter <span class="caret"></span></button>' +
+        '<ul uib-dropdown-menu role="menu" aria-labelledby="single-button">' +
+        '<li role="menuitem" ng-repeat="item in dataAnnotations"><a href="#" ng-click="$parent.showFilterFields(item)">{{item.field}}</a></li>' +
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+        '<div class="form-group" ng-show="showFilterInput">' +
+        '<select class="form-control" ng-model="sel.filtOperator" ng-options="filter.name for filter in selectedFilter"></select>' +
+        '<input type="text" class="form-control" placeholder="filter text" ng-model="sel.filtValue">' +
+        '<button class="btn btn-primary" type="button" ng-click="applyFilter(sel)">Apply Filter</button>' +
+        '</div>' +
         '</form>' +
+        '<ul class="list-inline">' +
+        '<li class="bg-info" ng-repeat="fil in filter"> {{fil.filtField}} {{fil.filtOperator.name}} = {{fil.filtValue}} ' +
+        '<button type="button" class="close" aria-label="Close" ng-click="removeFilter($index)"><span aria-hidden="true">&times;</span></button>' +
+        '</li>' +
+        '</ul>' +
         '<table class="table table-hover">' +
         '<thead>' +
         '<tr>' +
@@ -28,7 +46,6 @@ mTable.directive('dyntable', function() {
         '<span ng-show="$parent.sortField == head && $parent.sortReverse" class="glyphicon glyphicon-chevron-up"></span>' +
         '</a>' +
         '</th>' +
-        '</tr>' +
         '</thead>' +
         '<tbody>' +
         '<tr ng-repeat="row in data | orderBy:sortField:sortReverse | filter: searchTable" ng-class="{info: isRowSelected(row)}" ng-click="setRowSelected(row);">' +
@@ -40,44 +57,74 @@ mTable.directive('dyntable', function() {
         scope: {
             data: '=',
             selectionType: '@selectiontype',
-            selectedRows: '=selectedrows'
+            selectedRows: '=selectedrows',
+            dataAnnotations: '=annotations'
         },
         controller: function($scope) {
 
-            $scope.sortField = "";
-            $scope.sortReverse = false;
-            $scope.searchTable = "";
+            $scope.showFilterFields = function(item) {
+                $scope.showFilterInput = true;
+                $scope.selectedFilter = item.filter;
+                $scope.sel.filtField = item.field;
+            };
 
-            $scope.setRowSelected = function(row) {
+        },
+        link: function(scope, elem, attrs) {
 
-                if($scope.data.selected == null) {
-                    $scope.data.selected = [];
+            scope.sortField = "";
+            scope.sortReverse = false;
+            scope.searchTable = "";
+            scope.showFilterMenu = false;
+            scope.showFilterInput = false;
+            scope.filter = [];
+            scope.sel = {
+                filtField: "",
+                filtOperator: "",
+                filtValue: ''
+            };
+
+            scope.applyFilter = function(sel) {
+                scope.filter.push(sel);
+                scope.getdata();
+
+                scope.sel = {
+                    filtField: "",
+                    filtOperator: "",
+                    filtValue: ''
+                };
+
+                scope.showFilterInput = false;
+            };
+
+            scope.removeFilter = function(index) {
+                scope.filter.splice(index, 1);
+                scope.getdata();
+            };
+
+            scope.getdata = function() {
+                console.log("call service to reload data");
+            };
+
+            scope.setRowSelected = function(row) {
+
+                if(scope.data.selected == null) {
+                    scope.data.selected = [];
                 }
 
-                if($scope.selectionType === "multiple") {
+                if(scope.selectionType === "multiple") {
 
-                    if(!$scope.isRowSelected(row)) {
-                        $scope.data.selected.push(row);
+                    if(!scope.isRowSelected(row)) {
+                        scope.data.selected.push(row);
                     }
                     else {
-                        $scope.data.selected.splice($scope.data.selected.indexOf(row), 1);
+                        scope.data.selected.splice(scope.data.selected.indexOf(row), 1);
                     }
                 }
                 else {
-                    $scope.data.selected = [];
-                    $scope.data.selected.push(row);
+                    scope.data.selected = [];
+                    scope.data.selected.push(row);
                 }
-
-                console.log($scope);
             };
-
-/*            $scope.setSort = function(field) {
-                $scope.sortField = field;
-                console.log(field);
-                console.log($scope);
-            };*/
-        },
-        link: function(scope, elem, attrs) {
 
             scope.isRowSelected = function(row) {
 
@@ -91,6 +138,10 @@ mTable.directive('dyntable', function() {
             scope.$watch('data', function() {
                 scope.headers = Object.keys(scope.data[0]);
                 scope.headers.splice(scope.headers.indexOf('$$hashKey'), 1);
+
+                if(scope.dataAnnotations != null) {
+                    scope.showFilterMenu = true;
+                }
             }, true);
         }
     }

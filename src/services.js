@@ -98,12 +98,13 @@ mServices.factory('measurementAPI', function($http) {
             "dataAnnotations": [{
                 "field": 'Name',
                 "description": 'abc',
-                "label": 'measurement id'
-/*                "stats": {
+                "label": 'measurement id',
+                "stats": {
                     "rowCount": 10
                 },
                 "filter": [{
-                }]*/
+                    "name": 'contains'
+                }]
             }, {
                 "field": 'label',
                 "description": 'abc',

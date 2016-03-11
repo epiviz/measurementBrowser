@@ -67,8 +67,6 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         if($scope.active == 1) {
             $scope.disPrevButton = true;
         }
-
-        console.log($scope);
     };
 
     $scope.AddSelected = function () {
@@ -98,6 +96,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.current = $scope.data.dataAnnotations.dataAnnotations;
                 break;
             case 'dataMeasurements':
+                $scope.data.dataAnnotations = $scope.data.dataAnnotations ? $scope.data.dataAnnotations : measurementAPI.getDataAnnotations();
                 $scope.data.dataMeasurements = $scope.data.dataMeasurements ? $scope.data.dataMeasurements : measurementAPI.getMeasurements();
                 $scope.current = $scope.data.dataMeasurements.dataMeasurements;
                 break;
