@@ -31,12 +31,12 @@ mTable.directive('dyntable', function() {
         '</div>' +
         '<div class="form-group" ng-show="showFilterInput">' +
         '<select class="form-control" ng-model="sel.filtOperator" ng-options="filter.name for filter in selectedFilter"></select>' +
-        '<input type="text" class="form-control" placeholder="filter text" ng-model="sel.filtValue">' +
+        '<input type="text" class="form-control" placeholder="keyword" ng-model="sel.filtValue">' +
         '<button class="btn btn-primary" type="button" ng-click="applyFilter(sel)">Apply Filter</button>' +
         '</div>' +
         '</form>' +
         '<ul class="list-inline">' +
-        '<li class="bg-info" ng-repeat="fil in filter"> {{fil.filtField}} {{fil.filtOperator.name}} = {{fil.filtValue}} ' +
+        '<li class="bg-info" ng-repeat="fil in filter"> {{fil.filtField}} {{fil.filtOperator.name}} {{fil.filtValue}} ' +
         '<button type="button" class="close" aria-label="Close" ng-click="removeFilter($index)"><span aria-hidden="true">&times;</span></button>' +
         '</li>' +
         '</ul>' +

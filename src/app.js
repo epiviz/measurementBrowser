@@ -7,5 +7,6 @@ var app = angular.module('measurementModule',
     [
         'mControllers',
         'mServices',
-        'dynamicTable'
+        'dynamicTable',
+        'chartTable'
     ]);

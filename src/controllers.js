@@ -3,7 +3,7 @@
  * Date: 3/8/2016
  */
 
-var mControllers = angular.module('mControllers', ['mServices', 'ui.bootstrap', 'dynamicTable']);
+var mControllers = angular.module('mControllers', ['mServices', 'ui.bootstrap', 'dynamicTable', 'chartTable']);
 
 mControllers.controller('modalCtrl', function($scope, $uibModal, $log) {
     $scope.toggleModal = function() {
@@ -20,7 +20,29 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.active = 1;
     $scope.data = {};
     $scope.current = {};
-    //$scope.current.selected = [];
+
+    // TODO: use this object to update measurement selections
+    $scope.data.selection = {
+        /**
+         *  measurement object
+         *  {
+         *     dataProvider: ''
+         *     dataSource: ''
+         *     measurement: ''
+         *  }
+         *
+         *  chart object
+         *  {
+         *      chart: '' (sctater, line, heatmap etc)
+         *      xAxis: '' (measurement name)
+         *      yAxis: '' (measurement name)
+         *      xAxisColor: ''
+         *      yAxisColor: ''
+         *  }
+         **/
+        measurements: [],
+        chart: {}
+    };
 
     $scope.disNextButton = true;
     $scope.disPrevButton = true;
@@ -32,8 +54,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         { title:'Data Provider', content:'table with data providers', info:'', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'},
         { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single' },
         /*{ title:'Annotations', content:'table with data annotations', info:'', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },*/
-        { title:'Measurements', content:'table with data measurements', info:'select measurements to plot', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple'},
-        { title:'Chart Type', content:'table with charts', info:'choose a chart type', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'}
+        { title:'Measurements', content:'table with data measurements', info:'select measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple'},
+        { title:'Selected Measurements', content:'table with data measurements', info:'select measurements to plot', disabled: true, id:'dataMeasurementsShow', minSelection: 0, templateURL: 'src/templates/_table.html', selectionType: 'single'},
+        { title:'Chart Type', content:'table with charts', info:'choose a chart type', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_charts.html', selectionType: 'single'}
     ];
 
     $scope.nextTab = function () {
@@ -70,6 +93,10 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     $scope.AddSelected = function () {
         $uibModalInstance.close();
+
+        // Format and generate array to add a plot to the UI
+        console.log("format data in the way epiviz-5 expects!");
+
     };
 
     $scope.cancel = function () {
@@ -83,8 +110,8 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
         switch(id) {
             case 'dataProvider':
-                $scope.data.dataProvider = $scope.data.dataProvider ? $scope.data.dataProvider : measurementAPI.getDataProviders();
-                $scope.current = $scope.data.dataProvider.dataProviders;
+                $scope.data.dataProviders = $scope.data.dataProviders ? $scope.data.dataProviders : measurementAPI.getDataProviders();
+                $scope.current = $scope.data.dataProviders.dataProviders;
                 break;
             case 'dataSources':
                 $scope.data.dataSources = $scope.data.dataSources ? $scope.data.dataSources : measurementAPI.getDataSources($scope.getSelectedDataProvider());
@@ -98,6 +125,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.data.dataAnnotations = $scope.data.dataAnnotations ? $scope.data.dataAnnotations : measurementAPI.getDataAnnotations();
                 $scope.data.dataMeasurements = $scope.data.dataMeasurements ? $scope.data.dataMeasurements : measurementAPI.getMeasurements();
                 $scope.current = $scope.data.dataMeasurements.dataMeasurements;
+                break;
+            case 'dataMeasurementsShow':
+                $scope.current = $scope.data.selection.measurements;
                 break;
             case 'chartTypes':
                 $scope.data.chartTypes = $scope.data.chartTypes ? $scope.data.chartTypes : measurementAPI.getChartTypes();
@@ -156,21 +186,34 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         switch(id) {
             case 'dataProvider':
                 $scope.data.dataSources = null;
+                $scope.data.dataAnnotations = null;
+                $scope.data.dataMeasurements = null;
                 break;
             case 'dataSources':
                 $scope.data.dataAnnotations = null;
+                $scope.data.dataMeasurements = null;
                 break;
             case 'dataAnnotations':
                 $scope.data.dataMeasurements = null;
                 break;
             case 'dataMeasurements':
                 $scope.data.chartTypes = null;
-                break;
-            case 'chartTypes':
+
+                // every measurement gets added to the list
+
+                if($scope.current.selected.length > 0) {
+                    var sdP = $scope.data.dataProviders.dataProviders.selected[0].serverName;
+                    var sdS = $scope.data.dataSources.dataSources.selected[0].name;
+                    var smeas = $scope.data.dataMeasurements.dataMeasurements.selected[$scope.data.dataMeasurements.dataMeasurements.selected.length-1].name;
+
+                    $scope.data.selection.measurements.push({'dataProvider': sdP, 'dataSource':sdS , 'measurement': smeas});
+                }
+
                 break;
             default:
-                console.log("Oops error loading tab");
-                console.log(id);
+                //console.log("Oops error loading tab");
+                //console.log(id);
+                break;
         }
 
     }, true);
