@@ -15,7 +15,7 @@ mTable.directive('dyntable', function() {
         '<div class="form-group">' +
         '<div class="input-group">' +
         '<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>' +
-        '<input type="text" class="form-control" placeholder="Search table" ng-model="searchTable">' +
+        '<input type="search" class="form-control" placeholder="Search table" ng-model="searchTable">' +
         '</div>' +
         '</div>' +
         '<div class="form-group" ng-show="showFilterMenu">' +
