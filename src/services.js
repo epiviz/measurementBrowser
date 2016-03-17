@@ -207,7 +207,7 @@ mServices.factory('measurementAPI', function($http, $q) {
 
          return deferred.promise;*/
 
-        //TODO: uncomment everthing from here
+        //TODO: uncomment everything from here
 
         response = {
             "dataMeasurements": [{

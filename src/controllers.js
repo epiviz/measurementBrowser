@@ -62,7 +62,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     //can also add tabs dynamically
     $scope.tabs = [
         { title:'Data Provider', content:'table with data providers', info:'', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_dataProvider.html', selectionType: 'single'},
-        { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single' },
+        { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },
         /*{ title:'Annotations', content:'table with data annotations', info:'', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },*/
         { title:'Measurements', content:'table with data measurements', info:'select measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_mTable.html', selectionType: 'multiple'},
         { title:'Selected Measurements', content:'table with data measurements', info:'select measurements to plot', disabled: true, id:'dataMeasurementsShow', minSelection: 0, templateURL: 'src/templates/_table.html', selectionType: 'single'}
