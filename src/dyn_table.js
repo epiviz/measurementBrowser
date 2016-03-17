@@ -36,7 +36,7 @@ mTable.directive('dyntable', function() {
         '</div>' +
         '</form>' +
         '<ul class="list-inline">' +
-        '<li class="bg-info" ng-repeat="fil in filter"> {{fil.filtField}} {{fil.filtOperator.name}} {{fil.filtValue}} ' +
+        '<li class="bg-info" ng-repeat="fil in tFilter"> {{fil.filtField}} {{fil.filtOperator.name}} {{fil.filtValue}} ' +
         '<button type="button" class="close" aria-label="Close" ng-click="removeFilter($index)"><span aria-hidden="true">&times;</span></button>' +
         '</li>' +
         '</ul>' +
@@ -58,12 +58,15 @@ mTable.directive('dyntable', function() {
         '</table>' +
         '</div>',
         scope: {
-            data: '=',
+            data: '=data',
+            tFilter: '=tfilter',
             selectionType: '@selectiontype',
             selectedRows: '=selectedrows',
             dataAnnotations: '=annotations'
         },
         controller: function($scope) {
+
+            console.log($scope);
 
             $scope.showFilterFields = function(item) {
 
@@ -88,7 +91,7 @@ mTable.directive('dyntable', function() {
             scope.showFilterInput = false;
             scope.showFilterInput = false;
             //scope.data.tFilter = [];
-            scope.filter = [];
+            //scope.filter = [];
             scope.sel = {
                 filtField: "",
                 filtOperator: "",
@@ -97,9 +100,11 @@ mTable.directive('dyntable', function() {
 
             scope.applyFilter = function(sel) {
 
-                scope.data.tFilter.push(sel);
-                scope.filter.push(sel);
-                //scope.getdata();
+                if(scope.tFilter == null) {
+                    scope.tFilter = [];
+                }
+
+                scope.tFilter.push(sel);
 
                 scope.sel = {
                     filtField: "",
@@ -111,13 +116,8 @@ mTable.directive('dyntable', function() {
             };
 
             scope.removeFilter = function(index) {
-                scope.data.tFilter.splice(index, 1);
-                scope.filter.splice(index, 1);
-                //scope.getdata();
-            };
-
-            scope.getdata = function() {
-                console.log("call service to reload data");
+                scope.tFilter.splice(index, 1);
+                //scope.filter.splice(index, 1);
             };
 
             scope.setRowSelected = function(row) {

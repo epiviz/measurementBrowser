@@ -26,6 +26,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     //current scope of the tab and table
     $scope.current = {};
 
+    //for filtering on measurements
+    $scope.data.mFilter = [];
+
     // measurement selection object
     $scope.data.selection = {
         /**
@@ -58,7 +61,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         { title:'Data Provider', content:'table with data providers', info:'', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single'},
         { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'single' },
         /*{ title:'Annotations', content:'table with data annotations', info:'', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },*/
-        { title:'Measurements', content:'table with data measurements', info:'select measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple'},
+        { title:'Measurements', content:'table with data measurements', info:'select measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_mTable.html', selectionType: 'multiple'},
         { title:'Selected Measurements', content:'table with data measurements', info:'select measurements to plot', disabled: true, id:'dataMeasurementsShow', minSelection: 0, templateURL: 'src/templates/_table.html', selectionType: 'single'}
         //{ title:'Chart Type', content:'table with charts', info:'choose a chart type', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_charts.html', selectionType: 'single'}
     ];
@@ -170,7 +173,6 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 if($scope.data.dataMeasurements !== undefined && $scope.data.dataMeasurements != null) {
                     //nothing has changed, use existing data
                     $scope.current = $scope.data.dataMeasurements.dataMeasurements;
-                    $scope.current.tFilter = [];
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
@@ -216,15 +218,14 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         return $scope.current.selected;
     };*/
 
-    $scope.$watch(function() {return $scope.current.tFilter}, function(oldVal, newVal) {
+    $scope.$watch(function() {return $scope.data.mFilter}, function(oldVal, newVal) {
 
         var id = $scope.tabs[$scope.active - 1].id;
 
         switch(id) {
             case 'dataMeasurements':
                 // run only on measurements tab
-                console.log($scope);
-                if($scope.current.tFilter !== undefined && $scope.current.tFilter.length > 0) {
+                if($scope.data.mFilter !== undefined && $scope.data.mFilter.length > 0) {
                     //console.log("added filters, load content again!");
                     $scope.data.dataMeasurements = null;
                     $scope.loadContent($scope.current.filter);
@@ -266,10 +267,12 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.data.dataSources = null;
                 $scope.data.dataAnnotations = null;
                 $scope.data.dataMeasurements = null;
+                $scope.data.mFilter = null;
                 break;
             case 'dataSources':
                 $scope.data.dataAnnotations = null;
                 $scope.data.dataMeasurements = null;
+                $scope.data.mFilter = null;
                 break;
             case 'dataAnnotations':
                 $scope.data.dataMeasurements = null;
