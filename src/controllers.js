@@ -61,7 +61,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     //can also add tabs dynamically
     $scope.tabs = [
-        { title:'Data Provider', content:'table with data providers', info:'', id:'dataProvider', minSelection: 1, templateURL: 'src/templates/_dataProvider.html', selectionType: 'single'},
+        { title:'Data Provider', content:'table with data providers', info:'', id:'dataProviders', minSelection: 1, templateURL: 'src/templates/_dataProvider.html', selectionType: 'single'},
         { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },
         /*{ title:'Annotations', content:'table with data annotations', info:'', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },*/
         { title:'Measurements', content:'table with data measurements', info:'select measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_mTable.html', selectionType: 'multiple'},
@@ -71,10 +71,10 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     $scope.addDataProvider = function(url) {
 
-        $http.get(url + '/dataProvider').then(function(resp) {
-            $scope.data.dataProviders.dataProviders.push({'url': url, 'status': 'FAIL'});
-        }, function(error) {
+        $http.get(url + '/dataProviders').then(function(resp) {
             $scope.data.dataProviders.dataProviders.push({'url': url, 'status': 'AVAILABLE'});
+        }, function(error) {
+            $scope.data.dataProviders.dataProviders.push({'url': url, 'status': 'FAIL'});
         });
     };
 
@@ -135,7 +135,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         //TODO: use nested tree structure for selections!
 
         switch(id) {
-            case 'dataProvider':
+            case 'dataProviders':
                 //$scope.data.dataProviders = $scope.data.dataProviders ? $scope.data.dataProviders : measurementAPI.getDataProviders();
                 $scope.loadDataProviders();
                 $scope.current = $scope.data.dataProviders.dataProviders;
@@ -284,7 +284,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         var id = $scope.tabs[$scope.active - 1].id;
 
         switch(id) {
-            case 'dataProvider':
+            case 'dataProviders':
                 $scope.data.dataSources = null;
                 $scope.data.dataAnnotations = null;
                 $scope.data.dataMeasurements = null;
