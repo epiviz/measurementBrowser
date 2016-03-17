@@ -5,18 +5,13 @@
 
 var mServices = angular.module('mServices', []);
 
-mServices.factory('measurementAPI', function($http) {
+mServices.factory('measurementAPI', function($http, $q) {
 
     var service = {};
 
     service.getDataProviders = function() {
 
-        // TODO: make actual web service calls
-
-        /*    $http.get('')
-         .then(function(response) {
-         $scope.mdataProviders = {}
-         });*/
+        //TODO : Use UI to let user add data Providers.
 
         return {
             "dataProviders": [{
@@ -34,16 +29,26 @@ mServices.factory('measurementAPI', function($http) {
     };
 
     service.getDataSources = function(dataProvider) {
-        // TODO: make actual web service calls
 
-        /*    $http.get('')
-         .then(function(response) {
-         $scope.mdataSources = {}
-         });*/
+
+        //TODO: use the url
+
+        var deferred = $q.defer();
+
+        /*         $http({
+            method: 'GET',
+            url: ''
+         }).success(function(response) {
+            deferred.resolve(response);
+         });
+
+         return deferred.promise;*/
+
+        //TODO: uncomment everthing from here
 
         switch(dataProvider) {
             case 'EpivizUMD':
-                return {
+                response = {
                     "dataSources": [{
                         "name": 'Affymetrix',
                         "description": 'xyz',
@@ -58,23 +63,25 @@ mServices.factory('measurementAPI', function($http) {
                         "version": '1'
                     }]
                 };
+                deferred.resolve(response);
                 break;
             case 'MetavizUMD':
-                return {
+                response =  {
                     "dataSources": [{
-                        "name": 'meta',
+                        "name": 'meta1',
                         "description": 'xyz',
                         "version": '3'
                     }, {
-                        "name": 'meta',
+                        "name": 'meta2',
                         "description": 'xyz',
                         "version": '5'
                     }, {
-                        "name": 'meta',
+                        "name": 'meta3',
                         "description": 'xyz',
                         "version": '2'
                     }]
                 };
+                deferred.resolve(response);
                 break;
             default:
                 return {
@@ -82,18 +89,28 @@ mServices.factory('measurementAPI', function($http) {
                 };
                 break;
         }
+
+        return deferred.promise;
     };
 
-    service.getDataAnnotations = function() {
+    service.getDataAnnotations = function(dataSource) {
 
-        // TODO: make actual web service calls
+        //TODO: use the url, use the data source param and append it the url!
 
-        /*    $http.get('')
-         .then(function(response) {
-         $scope.mdataAnnotations = {}
-         });*/
+        var deferred = $q.defer();
 
-        return {
+        /*         $http({
+            method: 'GET',
+            url: ''
+         }).success(function(response) {
+            deferred.resolve(response);
+         });
+
+         return deferred.promise;*/
+
+        //TODO: uncomment everthing from here
+
+        response = {
             "dataSource": 'Affymetrix',
             "dataAnnotations": [{
                 "field": 'Name',
@@ -133,19 +150,32 @@ mServices.factory('measurementAPI', function($http) {
                 "filter": [{
                 }]*/
             }]
-        }
+        };
+
+        deferred.resolve(response);
+
+        return deferred.promise;
+
     };
 
-    service.getMeasurements = function() {
+    service.getMeasurements = function(dataSource) {
 
-        // TODO: make actual web service calls
+        //TODO: use the url, use the data source param and append it the url!
 
-        /*    $http.get('')
-         .then(function(response) {
-         $scope.mdataMeasurements = {}
-         });*/
+        var deferred = $q.defer();
 
-        return {
+        /*         $http({
+            method: 'GET',
+            url: ''
+         }).success(function(response) {
+            deferred.resolve(response);
+         });
+
+         return deferred.promise;*/
+
+        //TODO: uncomment everthing from here
+
+        response = {
             "dataMeasurements": [{
                 'name': 'Expression colon cancer',
                 'label': 'Expression colon cancer',
@@ -167,17 +197,14 @@ mServices.factory('measurementAPI', function($http) {
                 'tissueType': 'colon',
                 'tissueSubType' : 'normal'
             }]
-        }
+        };
+
+        deferred.resolve(response);
+
+        return deferred.promise;
     };
 
     service.getChartTypes = function() {
-
-        // TODO: make actual web service calls
-
-        /*    $http.get('')
-         .then(function(response) {
-         $scope.mdataMeasurements = {}
-         });*/
 
         return {
             "chartTypes": [{

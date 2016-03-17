@@ -78,7 +78,6 @@ mTable.directive('dyntable', function() {
                     $scope.showFilterInput = false;
                 }
             };
-
         },
         link: function(scope, elem, attrs) {
 
@@ -88,6 +87,7 @@ mTable.directive('dyntable', function() {
             scope.showFilterMenu = false;
             scope.showFilterInput = false;
             scope.showFilterInput = false;
+            //scope.data.tFilter = [];
             scope.filter = [];
             scope.sel = {
                 filtField: "",
@@ -96,8 +96,10 @@ mTable.directive('dyntable', function() {
             };
 
             scope.applyFilter = function(sel) {
+
+                scope.data.tFilter.push(sel);
                 scope.filter.push(sel);
-                scope.getdata();
+                //scope.getdata();
 
                 scope.sel = {
                     filtField: "",
@@ -109,8 +111,9 @@ mTable.directive('dyntable', function() {
             };
 
             scope.removeFilter = function(index) {
+                scope.data.tFilter.splice(index, 1);
                 scope.filter.splice(index, 1);
-                scope.getdata();
+                //scope.getdata();
             };
 
             scope.getdata = function() {
