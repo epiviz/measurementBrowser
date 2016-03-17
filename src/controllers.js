@@ -15,7 +15,7 @@ mControllers.controller('modalCtrl', function($scope, $uibModal, $log) {
     }
 });
 
-mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance, measurementAPI, $timeout, $compile) {
+mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance, measurementAPI, $timeout, $http) {
 
     //for navigating tabs
     $scope.active = 1;
@@ -52,6 +52,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         chart: {}
     };
 
+    $scope.data.dataProviders = {};
+    $scope.data.dataProviders.dataProviders = [];
+
     $scope.disNextButton = true;
     $scope.disPrevButton = true;
     $scope.disAddSelButton = true;
@@ -67,10 +70,18 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     ];
 
     $scope.addDataProvider = function(url) {
-        console.log(url);
-        $scope.data.dataProviders.dataProviders.push({'url': url});
 
-        console.log($scope);
+        $http.get(url + '/dataProvider').then(function(resp) {
+            $scope.data.dataProviders.dataProviders.push({'url': url, 'status': 'FAIL'});
+        }, function(error) {
+            $scope.data.dataProviders.dataProviders.push({'url': url, 'status': 'AVAILABLE'});
+        });
+    };
+
+    $scope.loadDataProviders = function() {
+
+        //TODO check for epivizr instance and status!
+
     };
 
     $scope.nextTab = function () {
@@ -125,7 +136,8 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
         switch(id) {
             case 'dataProvider':
-                $scope.data.dataProviders = $scope.data.dataProviders ? $scope.data.dataProviders : measurementAPI.getDataProviders();
+                //$scope.data.dataProviders = $scope.data.dataProviders ? $scope.data.dataProviders : measurementAPI.getDataProviders();
+                $scope.loadDataProviders();
                 $scope.current = $scope.data.dataProviders.dataProviders;
                 break;
             case 'dataSources':
@@ -154,7 +166,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
-                    measurementAPI.getDataAnnotations($scope.getSelectedDataSource())
+                    measurementAPI.getDataAnnotations($scope.getSelectedDataProvider(),$scope.getSelectedDataSource())
                         .then(function(response) {
                             $scope.data.dataAnnotations = response;
                             $scope.current = $scope.data.dataAnnotations.dataAnnotations;
@@ -170,7 +182,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
-                    measurementAPI.getDataAnnotations($scope.getSelectedDataSource())
+                    measurementAPI.getDataAnnotations($scope.getSelectedDataProvider(), $scope.getSelectedDataSource())
                         .then(function(response) {
                             $scope.data.dataAnnotations = response;
                             //$scope.current = $scope.data.dataAnnotations.dataAnnotations;
@@ -183,7 +195,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
-                    measurementAPI.getMeasurements($scope.getSelectedDataSource())
+                    measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.getSelectedDataSource(), $scope.data.mFilter)
                         .then(function(response) {
                             $scope.data.dataMeasurements = response;
                             $scope.current = $scope.data.dataMeasurements.dataMeasurements;
@@ -210,11 +222,13 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     };
 
     $scope.getSelectedDataProvider = function() {
-        return $scope.data.dataProviders.dataProviders.selected[0].serverName;
+
+        console.log($scope.data.dataProviders.dataProviders.selected);
+        return $scope.data.dataProviders.dataProviders.selected[0];
     };
 
     $scope.getSelectedDataSource = function() {
-        return $scope.data.dataSources.dataSources.selected[0].name;
+        return $scope.data.dataSources.dataSources.selected[0];
     };
 
 /*    $scope.getSelectedDataAnnotations = function() {

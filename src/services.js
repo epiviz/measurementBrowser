@@ -35,24 +35,25 @@ mServices.factory('measurementAPI', function($http, $q) {
 
     service.getDataSources = function(dataProvider) {
 
+        var ds_url = dataProvider.url + '/dataSource';
 
         //TODO: use the url
 
         var deferred = $q.defer();
 
-        /*         $http({
+/*        $http({
             method: 'GET',
-            url: ''
-         }).success(function(response) {
+            url: ds_url
+        }).then(function(response) {
             deferred.resolve(response);
-         });
+        });
 
          return deferred.promise;*/
 
         //TODO: uncomment everthing from here
 
         switch(dataProvider) {
-            case 'EpivizUMD':
+            case 'hello':
                 response = {
                     "dataSources": [{
                         "name": 'Affymetrix',
@@ -89,16 +90,31 @@ mServices.factory('measurementAPI', function($http, $q) {
                 deferred.resolve(response);
                 break;
             default:
-                return {
-                    "error" : 'data provider does not exist'
+                response =  {
+                    "dataSources": [{
+                        "name": 'meta1',
+                        "description": 'xyz',
+                        "version": '3'
+                    }, {
+                        "name": 'meta2',
+                        "description": 'xyz',
+                        "version": '5'
+                    }, {
+                        "name": 'meta3',
+                        "description": 'xyz',
+                        "version": '2'
+                    }]
                 };
+                deferred.resolve(response);
                 break;
         }
 
         return deferred.promise;
     };
 
-    service.getDataAnnotations = function(dataSource) {
+    service.getDataAnnotations = function(dataProvider, dataSource) {
+
+        var ds_url = dataProvider.url + '/annotations/' + dataSource.name;
 
         //TODO: use the url, use the data source param and append it the url!
 
@@ -106,8 +122,8 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         /*         $http({
             method: 'GET',
-            url: ''
-         }).success(function(response) {
+            url: ds_url
+         }).then(function(response) {
             deferred.resolve(response);
          });
 
@@ -163,18 +179,31 @@ mServices.factory('measurementAPI', function($http, $q) {
 
     };
 
-    service.getMeasurements = function(dataSource) {
+    service.getMeasurements = function(dataProvider, dataSource, filters) {
+
+        var ds_url = dataProvider.url + '/annotations/' + dataSource.name;
+
+        //TEST FILTERS
+/*        filters = [
+            {'field': 'sex', 'filterName': 'equals', 'filterValue': 'male', negate:'false'},
+            {'field': 'age', 'filterName': 'range', 'filterValue': '20,30', negate:'false'}];*/
 
         //TODO: use the url, use the data source param and append it the url!
 
         var deferred = $q.defer();
 
-        /*         $http({
+/*        $http({
             method: 'GET',
-            url: ''
-         }).success(function(response) {
+            url: ds_url,
+            params: {
+                pageSize: 10,
+                filter : JSON.stringify(filters)
+            }
+         }).then(function(response) {
             deferred.resolve(response);
-         });
+         }, function(error) {
+            //TODO: ERROR CALLING WEBSERVICE
+        });
 
          return deferred.promise;*/
 
