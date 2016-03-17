@@ -12,8 +12,13 @@ mServices.factory('measurementAPI', function($http, $q) {
     service.getDataProviders = function() {
 
         //TODO : Use UI to let user add data Providers.
+        // Query localhost for dataproviders. epivizr ? metavizr ? etc
 
         return {
+            "dataProviders": []
+        };
+
+/*        return {
             "dataProviders": [{
                 "serverType": 'MySQL',
                 "serverName": 'EpivizUMD',
@@ -25,7 +30,7 @@ mServices.factory('measurementAPI', function($http, $q) {
                 "url": 'http://metaviz.cbcb.umd.edu',
                 "version": '1'
             }]
-        }
+        }*/
     };
 
     service.getDataSources = function(dataProvider) {

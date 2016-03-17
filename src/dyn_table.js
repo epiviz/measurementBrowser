@@ -66,8 +66,6 @@ mTable.directive('dyntable', function() {
         },
         controller: function($scope) {
 
-            console.log($scope);
-
             $scope.showFilterFields = function(item) {
 
                 if(item.filter != null ) {
@@ -151,8 +149,11 @@ mTable.directive('dyntable', function() {
             };
 
             scope.$watch('data', function() {
-                scope.headers = Object.keys(scope.data[0]);
-                scope.headers.splice(scope.headers.indexOf('$$hashKey'), 1);
+
+                if(scope.data.length > 0) {
+                    scope.headers = Object.keys(scope.data[0]);
+                    scope.headers.splice(scope.headers.indexOf('$$hashKey'), 1);
+                }
 
                 if(scope.dataAnnotations != null) {
                     scope.showFilterMenu = true;
