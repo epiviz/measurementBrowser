@@ -153,8 +153,14 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                     // dataSources is empty, make calls to the ServiceFactory
                     measurementAPI.getDataSources($scope.getSelectedDataProvider())
                         .then(function(response) {
-                            $scope.data.dataSources = response;
+
+                            console.log(response);
+                            $scope.data.dataSources = response.data;
                             $scope.current = $scope.data.dataSources.dataSources;
+                        }, function(error) {
+                            //something wrong with webservices
+
+                            console.log(error);
                         });
                 }
 
@@ -168,7 +174,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                     // dataSources is empty, make calls to the ServiceFactory
                     measurementAPI.getDataAnnotations($scope.getSelectedDataProvider(),$scope.getSelectedDataSource())
                         .then(function(response) {
-                            $scope.data.dataAnnotations = response;
+                            $scope.data.dataAnnotations = response.data;
                             $scope.current = $scope.data.dataAnnotations.dataAnnotations;
                         });
                 }
@@ -184,7 +190,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                     // dataSources is empty, make calls to the ServiceFactory
                     measurementAPI.getDataAnnotations($scope.getSelectedDataProvider(), $scope.getSelectedDataSource())
                         .then(function(response) {
-                            $scope.data.dataAnnotations = response;
+                            $scope.data.dataAnnotations = response.data;
                             //$scope.current = $scope.data.dataAnnotations.dataAnnotations;
                         });
                 }
@@ -197,7 +203,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                     // dataSources is empty, make calls to the ServiceFactory
                     measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.getSelectedDataSource(), $scope.data.mFilter)
                         .then(function(response) {
-                            $scope.data.dataMeasurements = response;
+                            $scope.data.dataMeasurements = response.data;
                             $scope.current = $scope.data.dataMeasurements.dataMeasurements;
                         });
                 }

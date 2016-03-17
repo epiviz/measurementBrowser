@@ -35,7 +35,7 @@ mServices.factory('measurementAPI', function($http, $q) {
 
     service.getDataSources = function(dataProvider) {
 
-        var ds_url = dataProvider.url + '/dataSource';
+        var ds_url = dataProvider.url + '/dataSources';
 
         //TODO: use the url
 
@@ -50,7 +50,7 @@ mServices.factory('measurementAPI', function($http, $q) {
 
          return deferred.promise;*/
 
-        //TODO: uncomment everthing from here
+        //TODO: comment everything from here
 
         switch(dataProvider) {
             case 'hello':
@@ -69,7 +69,7 @@ mServices.factory('measurementAPI', function($http, $q) {
                         "version": '1'
                     }]
                 };
-                deferred.resolve(response);
+                deferred.resolve({'data': response});
                 break;
             case 'MetavizUMD':
                 response =  {
@@ -87,7 +87,7 @@ mServices.factory('measurementAPI', function($http, $q) {
                         "version": '2'
                     }]
                 };
-                deferred.resolve(response);
+                deferred.resolve({'data': response});
                 break;
             default:
                 response =  {
@@ -105,7 +105,7 @@ mServices.factory('measurementAPI', function($http, $q) {
                         "version": '2'
                     }]
                 };
-                deferred.resolve(response);
+                deferred.resolve({'data': response});
                 break;
         }
 
@@ -131,7 +131,7 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         //TODO: uncomment everthing from here
 
-        response = {
+        var response = {
             "dataSource": 'Affymetrix',
             "dataAnnotations": [{
                 "field": 'Name',
@@ -173,7 +173,7 @@ mServices.factory('measurementAPI', function($http, $q) {
             }]
         };
 
-        deferred.resolve(response);
+        deferred.resolve({'data': response});
 
         return deferred.promise;
 
@@ -233,7 +233,7 @@ mServices.factory('measurementAPI', function($http, $q) {
             }]
         };
 
-        deferred.resolve(response);
+        deferred.resolve({'data': response});
 
         return deferred.promise;
     };
