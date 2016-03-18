@@ -37,22 +37,20 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         var ds_url = dataProvider.url + '/dataSources';
 
-        //TODO: use the url
-
         var deferred = $q.defer();
 
-/*        $http({
+        $http({
             method: 'GET',
             url: ds_url
         }).then(function(response) {
             deferred.resolve(response);
         });
 
-         return deferred.promise;*/
+         return deferred.promise;
 
         //TODO: comment everything from here
 
-        switch(dataProvider) {
+/*        switch(dataProvider) {
             case 'hello':
                 response = {
                     "dataSources": [{
@@ -109,7 +107,7 @@ mServices.factory('measurementAPI', function($http, $q) {
                 break;
         }
 
-        return deferred.promise;
+        return deferred.promise;*/
     };
 
     service.getDataAnnotations = function(dataProvider, dataSource) {
@@ -120,16 +118,16 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         var deferred = $q.defer();
 
-        /*         $http({
+        $http({
             method: 'GET',
             url: ds_url
          }).then(function(response) {
             deferred.resolve(response);
          });
 
-         return deferred.promise;*/
+         return deferred.promise;
 
-        //TODO: uncomment everthing from here
+/*        //TODO: comment everthing from here
 
         var response = {
             "dataSource": 'Affymetrix',
@@ -147,41 +145,26 @@ mServices.factory('measurementAPI', function($http, $q) {
                 "field": 'label',
                 "description": 'abc',
                 "label": 'Measurement name'
-/*                "stats": {
-                    "rowCount": 10
-                },
-                "filter": [{
-                }]*/
             }, {
                 "field": 'tissue type',
                 "description": 'abc',
                 "label": 'Tissue Type'
-/*                "stats": {
-                    "rowCount": 10
-                },
-                "filter": [{
-                }]*/
             }, {
                 "field": 'tissue sub type',
                 "description": 'abc',
                 "label": 'tissue sub type'
-/*                "stats": {
-                    "rowCount": 10
-                },
-                "filter": [{
-                }]*/
             }]
         };
 
         deferred.resolve({'data': response});
 
-        return deferred.promise;
+        return deferred.promise;*/
 
     };
 
     service.getMeasurements = function(dataProvider, dataSource, filters) {
 
-        var ds_url = dataProvider.url + '/annotations/' + dataSource.name;
+        var ds_url = dataProvider.url + '/measurements/' + dataSource.name;
 
         //TEST FILTERS
 /*        filters = [

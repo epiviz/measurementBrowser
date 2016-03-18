@@ -154,6 +154,9 @@ mTable.directive('dyntable', function() {
                     scope.headers = Object.keys(scope.data[0]);
                     scope.headers.splice(scope.headers.indexOf('$$hashKey'), 1);
                 }
+            }, true);
+
+            scope.$watch('dataAnnotations', function() {
 
                 if(scope.dataAnnotations != null) {
                     scope.showFilterMenu = true;

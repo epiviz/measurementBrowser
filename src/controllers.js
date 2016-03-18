@@ -82,6 +82,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
         //TODO check for epivizr instance and status!
 
+        $scope.addDataProvider('http://localhost:5000');
+        $scope.addDataProvider('http://localhost:5100');
+
     };
 
     $scope.nextTab = function () {
@@ -132,12 +135,12 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.loadContent = function(filter) {
         var id = $scope.tabs[$scope.active - 1].id;
 
-        //TODO: use nested tree structure for selections!
+        //TODO: write callbacks when no data is received from the server/ service is not available!
 
         switch(id) {
             case 'dataProviders':
                 //$scope.data.dataProviders = $scope.data.dataProviders ? $scope.data.dataProviders : measurementAPI.getDataProviders();
-                $scope.loadDataProviders();
+                //$scope.loadDataProviders();
                 $scope.current = $scope.data.dataProviders.dataProviders;
                 break;
             case 'dataSources':
@@ -182,6 +185,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 //$scope.current = $scope.data.dataAnnotations.dataAnnotations;
                 break;
             case 'dataMeasurements':
+
                 if($scope.data.dataAnnotations !== undefined && $scope.data.dataAnnotations != null) {
                     //nothing has changed, use existing data
                     //$scope.current = $scope.data.dataAnnotations.dataAnnotations;
@@ -210,6 +214,8 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 //$scope.data.dataAnnotations = $scope.data.dataAnnotations ? $scope.data.dataAnnotations : measurementAPI.getDataAnnotations();
                 //$scope.data.dataMeasurements = $scope.data.dataMeasurements ? $scope.data.dataMeasurements : measurementAPI.getMeasurements();
                 //$scope.current = $scope.data.dataMeasurements.dataMeasurements;
+
+                console.log($scope);
                 break;
             case 'dataMeasurementsShow':
                 $scope.current = $scope.data.selection.measurements;
@@ -327,4 +333,5 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     }, true);
 
     $scope.loadContent();
+    $scope.loadDataProviders();
 });
