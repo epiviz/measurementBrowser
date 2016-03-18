@@ -40,6 +40,7 @@ mTable.directive('dyntable', function() {
         '<button type="button" class="close" aria-label="Close" ng-click="removeFilter($index)"><span aria-hidden="true">&times;</span></button>' +
         '</li>' +
         '</ul>' +
+        '<div class="table-responsive">' +
         '<table class="table table-hover">' +
         '<thead>' +
         '<tr>' +
@@ -56,6 +57,7 @@ mTable.directive('dyntable', function() {
         '</tr>' +
         '</tbody>' +
         '</table>' +
+        '</div>' +
         '</div>',
         scope: {
             data: '=data',

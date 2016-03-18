@@ -166,6 +166,8 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         var ds_url = dataProvider.url + '/measurements/' + dataSource.name;
 
+        console.log(filters);
+
         //TEST FILTERS
 /*        filters = [
             {'field': 'sex', 'filterName': 'equals', 'filterValue': 'male', negate:'false'},
@@ -175,12 +177,12 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         var deferred = $q.defer();
 
-/*        $http({
+        $http({
             method: 'GET',
             url: ds_url,
             params: {
-                pageSize: 10,
-                filter : JSON.stringify(filters)
+                pageSize: 10/*,
+                filter : JSON.stringify(filters)*/
             }
          }).then(function(response) {
             deferred.resolve(response);
@@ -188,11 +190,11 @@ mServices.factory('measurementAPI', function($http, $q) {
             //TODO: ERROR CALLING WEBSERVICE
         });
 
-         return deferred.promise;*/
+         return deferred.promise;
 
-        //TODO: uncomment everything from here
+        //TODO: comment everything from here
 
-        response = {
+/*        response = {
             "dataMeasurements": [{
                 'name': 'Expression colon cancer',
                 'label': 'Expression colon cancer',
@@ -218,7 +220,7 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         deferred.resolve({'data': response});
 
-        return deferred.promise;
+        return deferred.promise;*/
     };
 
     service.getChartTypes = function() {
