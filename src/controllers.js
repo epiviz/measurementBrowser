@@ -21,7 +21,18 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.active = 1;
 
     //for caching data
-    $scope.data = {};
+    $scope.data = {
+        dataSources : {},
+        dataProviders: {},
+        dataMeasurements: {}
+    };
+
+    //all selections
+    $scope.selection = {
+        dataSources : [],
+        dataProviders: [],
+        dataMeasurements: []
+    };
 
     //current scope of the tab and table
     $scope.current = {};
@@ -29,7 +40,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     //for filtering on measurements
     $scope.data.mFilter = [];
 
-    // measurement selection object
+    // Final measurement selection object
     $scope.data.selection = {
         /**
          *  measurement object
@@ -52,8 +63,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         chart: {}
     };
 
-    $scope.data.dataProviders = {};
-    $scope.data.dataProviders.dataProviders = [];
+    $scope.data.dataProviders = {
+        dataProviders: []
+    };
 
     $scope.disNextButton = true;
     $scope.disPrevButton = true;
@@ -61,16 +73,15 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     //can also add tabs dynamically
     $scope.tabs = [
-        { title:'Data Provider', content:'table with data providers', info:'', id:'dataProviders', minSelection: 1, templateURL: 'src/templates/_dataProvider.html', selectionType: 'single'},
-        { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },
+        { title:'Data Provider', content:'table with data providers', info:'', id:'dataProviders', minSelection: 1, templateURL: 'src/templates/_dataProviders.html', selectionType: 'single'},
+        { title:'Data Sources', content:'table with data sources', info:'', disabled: true, id:'dataSources', minSelection: 1, templateURL: 'src/templates/_dataSources.html', selectionType: 'multiple' },
         /*{ title:'Annotations', content:'table with data annotations', info:'', disabled: true, id:'dataAnnotations', minSelection: 1, templateURL: 'src/templates/_table.html', selectionType: 'multiple' },*/
-        { title:'Measurements', content:'table with data measurements', info:'select measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_mTable.html', selectionType: 'multiple'},
+        { title:'Measurements', content:'table with data measurements', info:'select measurements', disabled: true, id:'dataMeasurements', minSelection: 1, templateURL: 'src/templates/_dataMeasurements.html', selectionType: 'multiple'},
         { title:'Selected Measurements', content:'table with data measurements', info:'select measurements to plot', disabled: true, id:'dataMeasurementsShow', minSelection: 0, templateURL: 'src/templates/_table.html', selectionType: 'single'}
         //{ title:'Chart Type', content:'table with charts', info:'choose a chart type', disabled: true, id:'chartTypes', minSelection: 1, templateURL: 'src/templates/_charts.html', selectionType: 'single'}
     ];
 
     $scope.addDataProvider = function(url) {
-
         $http.get(url + '/dataProviders').then(function(resp) {
             $scope.data.dataProviders.dataProviders.push({'url': url, 'status': 'AVAILABLE'});
         }, function(error) {
@@ -80,8 +91,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     $scope.loadDataProviders = function() {
 
-        //TODO check for epivizr instance and status!
-
+        //TODO: check for epivizr instance and status!
         $scope.addDataProvider('http://localhost:5000');
         $scope.addDataProvider('http://localhost:5100');
 
@@ -90,7 +100,6 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.nextTab = function () {
 
         if($scope.active < $scope.tabs.length) {
-
             $scope.tabs[$scope.active].disabled = false;
             $scope.active = $scope.active+1;
             $scope.loadContent();
@@ -126,27 +135,24 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     $scope.AddSelected = function () {
         $uibModalInstance.close();
+        //TODO: before closing modal, get current list of data providers and save it
     };
 
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
+        //TODO: before closing modal, get current list of data providers and save it
     };
 
     $scope.loadContent = function(filter) {
         var id = $scope.tabs[$scope.active - 1].id;
 
-        //TODO: write callbacks when no data is received from the server/ service is not available!
+        //TODO: write callbacks when no data is received from the server/service is not available!
 
         switch(id) {
-            case 'dataProviders':
-                //$scope.data.dataProviders = $scope.data.dataProviders ? $scope.data.dataProviders : measurementAPI.getDataProviders();
-                //$scope.loadDataProviders();
-                $scope.current = $scope.data.dataProviders.dataProviders;
-                break;
             case 'dataSources':
-                if($scope.data.dataSources !== undefined && $scope.data.dataSources != null) {
+                if($scope.data.dataSources.dataSources !== undefined && $scope.data.dataSources.dataSources.length > 0) {
                     //nothing has changed, use existing data
-                    $scope.current = $scope.data.dataSources.dataSources;
+                    //$scope.current = $scope.data.dataSources.dataSources;
                 }
                 else {
 
@@ -169,9 +175,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
                 break;
             case 'dataAnnotations':
-                if($scope.data.dataAnnotations !== undefined && $scope.data.dataAnnotations != null) {
+                if($scope.data.dataAnnotations.dataAnnotations !== undefined && $scope.data.dataAnnotations.dataAnnotations.length > 0) {
                     //nothing has changed, use existing data
-                    $scope.current = $scope.data.dataAnnotations.dataAnnotations;
+                    //$scope.current = $scope.data.dataAnnotations.dataAnnotations;
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
@@ -186,7 +192,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 break;
             case 'dataMeasurements':
 
-                if($scope.data.dataAnnotations !== undefined && $scope.data.dataAnnotations != null) {
+                if($scope.data.dataAnnotations.dataAnnotations !== undefined && $scope.data.dataAnnotations.dataAnnotations.length > 0) {
                     //nothing has changed, use existing data
                     //$scope.current = $scope.data.dataAnnotations.dataAnnotations;
                 }
@@ -199,9 +205,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                         });
                 }
 
-                if($scope.data.dataMeasurements !== undefined && $scope.data.dataMeasurements != null) {
+                if($scope.data.dataMeasurements.dataMeasurements !== undefined && $scope.data.dataMeasurements.dataMeasurements.length > 0) {
                     //nothing has changed, use existing data
-                    $scope.current = $scope.data.dataMeasurements.dataMeasurements;
+                    //$scope.current = $scope.data.dataMeasurements.dataMeasurements;
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
@@ -218,11 +224,11 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 console.log($scope);
                 break;
             case 'dataMeasurementsShow':
-                $scope.current = $scope.data.selection.measurements;
+                //$scope.current = $scope.data.selection.measurements;
                 break;
             case 'chartTypes':
-                $scope.data.chartTypes = $scope.data.chartTypes ? $scope.data.chartTypes : measurementAPI.getChartTypes();
-                $scope.current = $scope.data.chartTypes.chartTypes;
+                //$scope.data.chartTypes = $scope.data.chartTypes ? $scope.data.chartTypes : measurementAPI.getChartTypes();
+                //$scope.current = $scope.data.chartTypes.chartTypes;
                 break;
             default:
                 console.log("Oops error loading tab");
@@ -236,20 +242,12 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.getSelectedDataProvider = function() {
 
         console.log($scope.data.dataProviders.dataProviders.selected);
-        return $scope.data.dataProviders.dataProviders.selected[0];
+        return $scope.selection.dataProviders[0];
     };
 
     $scope.getSelectedDataSource = function() {
-        return $scope.data.dataSources.dataSources.selected[0];
+        return $scope.selection.dataSources[0];
     };
-
-/*    $scope.getSelectedDataAnnotations = function() {
-        return $scope.current.selected;
-    };
-
-    $scope.getSelectedDataMeasurements = function() {
-        return $scope.current.selected;
-    };*/
 
     $scope.$watch(function() {return $scope.data.mFilter}, function(oldVal, newVal) {
 
@@ -268,21 +266,43 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     }, true);
 
 
-    $scope.$watch(function() { return $scope.current.selected}, function(oldVal, newVal) {
+    $scope.$watch(function() { return $scope.selection}, function(oldVal, newVal) {
 
-        // if selection reaches the minimum required for a tab, activate next tab and enable the next button.
+        var id = $scope.tabs[$scope.active - 1].id;
 
-        if($scope.current.selected == null) {
-            $scope.current.selected = []
+        var tabSelection;
+
+        console.log($scope);
+
+        switch(id) {
+            case 'dataProviders':
+                tabSelection = $scope.selection.dataProviders;
+                $scope.data.dataSources = {};
+                $scope.data.dataAnnotations = {};
+                $scope.data.dataMeasurements = {};
+                $scope.data.mFilter = [];
+                break;
+            case 'dataSources':
+                tabSelection = $scope.selection.dataSources;
+                $scope.data.dataAnnotations = {};
+                $scope.data.dataMeasurements = {};
+                $scope.data.mFilter = [];
+                break;
+            case 'dataMeasurements':
+                tabSelection = $scope.selection.dataMeasurements;
+                $scope.data.chartTypes = {};
+                // every measurement selection gets added to the list
+                //$scope.addMeasurement();
+                break;
         }
 
-        if($scope.current.selected.length >= $scope.tabs[$scope.active - 1].minSelection) {
+        // if selection reaches the minimum required for a tab, activate next tab and enable the next button
+        if(tabSelection.length >= $scope.tabs[$scope.active - 1].minSelection) {
             $scope.disNextButton = false;
 
             if($scope.active != $scope.tabs.length) {
                 $scope.tabs[$scope.active].disabled = false;
             }
-
 
             if($scope.active > 1) {
                 $scope.disPrevButton = false;
@@ -292,46 +312,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.disNextButton = false;
             }
         }
-
-        var id = $scope.tabs[$scope.active - 1].id;
-
-        switch(id) {
-            case 'dataProviders':
-                $scope.data.dataSources = null;
-                $scope.data.dataAnnotations = null;
-                $scope.data.dataMeasurements = null;
-                $scope.data.mFilter = null;
-                break;
-            case 'dataSources':
-                $scope.data.dataAnnotations = null;
-                $scope.data.dataMeasurements = null;
-                $scope.data.mFilter = null;
-                break;
-            case 'dataAnnotations':
-                $scope.data.dataMeasurements = null;
-                break;
-            case 'dataMeasurements':
-                $scope.data.chartTypes = null;
-
-                // every measurement gets added to the list
-
-                if($scope.current.selected.length > 0) {
-                    var sdP = $scope.data.dataProviders.dataProviders.selected[0].serverName;
-                    var sdS = $scope.data.dataSources.dataSources.selected[0].name;
-                    var smeas = $scope.data.dataMeasurements.dataMeasurements.selected[$scope.data.dataMeasurements.dataMeasurements.selected.length-1].name;
-
-                    $scope.data.selection.measurements.push({'dataProvider': sdP, 'dataSource':sdS , 'measurement': smeas});
-                }
-
-                break;
-            default:
-                //console.log("Oops error loading tab");
-                //console.log(id);
-                break;
-        }
-
     }, true);
 
-    $scope.loadContent();
     $scope.loadDataProviders();
 });

@@ -11,6 +11,7 @@ mTable.directive('dyntable', function() {
         transclude: true,
         replace: true,
         template: '<div>' +
+        '<div ng-if="dataReceived == true">' +
         '<form class="form-inline">' +
         '<div class="form-group">' +
         '<div class="input-group">' +
@@ -52,19 +53,22 @@ mTable.directive('dyntable', function() {
         '</th>' +
         '</thead>' +
         '<tbody>' +
-        '<tr ng-repeat="row in data | orderBy:sortField:sortReverse | filter: searchTable" ng-class="{info: isRowSelected(row)}" ng-click="setRowSelected(row);">' +
+        '<tr ng-repeat="row in data | orderBy:sortField:sortReverse | filter:searchTable track by $index" ng-class="{info: isRowSelected(row)}" ng-click="setRowSelected(row);">' +
         '<td ng-repeat="cell in row">{{cell}}</td>' +
         '</tr>' +
         '</tbody>' +
         '</table>' +
         '</div>' +
+        '</div>' +
+        '<div ng-if="dataReceived == false"> No data received!! </div>' +
         '</div>',
         scope: {
             data: '=data',
             tFilter: '=tfilter',
             selectionType: '@selectiontype',
             selectedRows: '=selectedrows',
-            dataAnnotations: '=annotations'
+            dataAnnotations: '=annotations',
+            selection: '=selection'
         },
         controller: function($scope) {
 
@@ -89,7 +93,7 @@ mTable.directive('dyntable', function() {
             scope.searchTable = "";
             scope.showFilterMenu = false;
             scope.showFilterInput = false;
-            scope.showFilterInput = false;
+            scope.dataReceived = false;
             //scope.data.tFilter = [];
             //scope.filter = [];
             scope.sel = {
@@ -122,39 +126,38 @@ mTable.directive('dyntable', function() {
 
             scope.setRowSelected = function(row) {
 
-                if(scope.data.selected == null) {
-                    scope.data.selected = [];
-                }
-
                 if(scope.selectionType === "multiple") {
 
                     if(!scope.isRowSelected(row)) {
-                        scope.data.selected.push(row);
+                        scope.selection.push(row);
                     }
                     else {
-                        scope.data.selected.splice(scope.data.selected.indexOf(row), 1);
+                        scope.selection.splice(scope.data.selected.indexOf(row), 1);
                     }
                 }
                 else {
-                    scope.data.selected = [];
-                    scope.data.selected.push(row);
+                    scope.selection = [];
+                    scope.selection.push(row);
                 }
             };
 
             scope.isRowSelected = function(row) {
 
-                if(scope.data.selected == null) {
-                    scope.data.selected = [];
+                if(scope.selection == undefined) {
+                    return -1;
                 }
-
-                return scope.data.selected.indexOf(row) != -1;
+                return scope.selection.indexOf(row) != -1;
             };
 
             scope.$watch('data', function() {
 
-                if(scope.data.length > 0) {
+                if(scope.data !== undefined && scope.data.length > 0) {
+                    scope.dataReceived = true;
                     scope.headers = Object.keys(scope.data[0]);
                     scope.headers.splice(scope.headers.indexOf('$$hashKey'), 1);
+                }
+                else {
+                    scope.dataReceived = false;
                 }
             }, true);
 
