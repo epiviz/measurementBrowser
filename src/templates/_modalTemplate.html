@@ -1,17 +1,42 @@
 <div class="modal-header">
-    <h3 class="modal-title">{{title}}</h3>
+    <h3 class="modal-title">Measurements Browser</h3>
 </div>
 <div class="modal-body">
-    <uib-tabset active="active">
-        <uib-tab index="$index+1" ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled" select="selectTab()" ng-click="loadContent()">
-            <p class="bg-info">{{tab.info}}</p>
-            <ng-include src="tab.templateURL"></ng-include>
-        </uib-tab>
-    </uib-tabset>
+    <div class="row">
+        <div class="col-md-8">
+            <uib-tabset active="active">
+                <uib-tab index="$index+1" ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled" select="selectTab()" ng-click="loadContent()">
+                    <!--<p class="bg-info">{{tab.info}}</p>-->
+                    <ng-include src="tab.templateURL"></ng-include>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p>Current Selection</p>
+                </div>
+                <div class="panel-body">
+                    <p>Data Provider: {{selection.dataProviders[0].url}}</p>
+                    <p>Data Source: {{selection.dataSources[0].name}}</p>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p>Selected Measurements</p>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <li ng-repeat="m in data.selection.measurements">{{m.dataProvider}}, {{m.dataSource}}, {{m.measurement.id}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" type="button" ng-disabled="disPrevButton" ng-click="disPrevButton || prevTab()">Prev</button>
     <button class="btn btn-primary" type="button" ng-disabled="disNextButton" ng-click="disNextButton || nextTab()">Next</button>
-    <button class="btn btn-primary" ng-disabled="disAddSelButton" type="button" ng-click="disAddSelButton || AddSelected()">Add Chart</button>
+    <button class="btn btn-primary" ng-disabled="disAddSelButton" type="button" ng-click="disAddSelButton || AddSelected()">Add Selection</button>
     <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>

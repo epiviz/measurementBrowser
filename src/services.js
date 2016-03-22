@@ -166,8 +166,6 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         var ds_url = dataProvider.url + '/measurements/' + dataSource.name;
 
-        console.log(filters);
-
         //TEST FILTERS
 /*        filters = [
             {'field': 'sex', 'filterName': 'equals', 'filterValue': 'male', negate:'false'},
@@ -178,11 +176,11 @@ mServices.factory('measurementAPI', function($http, $q) {
         var deferred = $q.defer();
 
         $http({
-            method: 'GET',
+            method: 'POST',
             url: ds_url,
-            params: {
-                pageSize: 10/*,
-                filter : JSON.stringify(filters)*/
+            data: {
+                pageSize: 10,
+                filter : filters
             }
          }).then(function(response) {
             deferred.resolve(response);

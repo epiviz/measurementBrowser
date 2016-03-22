@@ -88,6 +88,9 @@ mTable.directive('dyntable', function() {
         },
         link: function(scope, elem, attrs) {
 
+            //TODO: implement infinite scroll (load data)
+            // emit to parent -> parent loads more data!
+
             scope.sortField = "";
             scope.sortReverse = false;
             scope.searchTable = "";
@@ -132,7 +135,7 @@ mTable.directive('dyntable', function() {
                         scope.selection.push(row);
                     }
                     else {
-                        scope.selection.splice(scope.data.selected.indexOf(row), 1);
+                        scope.selection.splice(scope.selection.indexOf(row), 1);
                     }
                 }
                 else {
