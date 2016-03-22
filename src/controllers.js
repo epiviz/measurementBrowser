@@ -68,6 +68,8 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         dataProviders: []
     };
 
+    $scope.alldataAnnotations = [];
+
 
     // for query builder
     $scope.fqBuilder = [];
@@ -90,7 +92,12 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.qDataSource = function(ds) {
         $scope.qBuilder.dataSource = ds.name;
         $scope.qDataSourceSel = true;
-        $scope.qField.dataAnnotations = $scope.data.dataAnnotations.dataAnnotations;
+
+        $scope.alldataAnnotations.forEach(function(da) {
+            if(da.dataSource == ds.name) {
+                $scope.qField.dataAnnotations = da.dataAnnotations;
+            }
+        });
     };
 
     $scope.qDataField = function(da) {
@@ -250,7 +257,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             case 'queryMeasurements':
 
                 // TODO: multiple data sources can be selected, use angular $q to async all req
-                if($scope.data.dataAnnotations.dataAnnotations !== undefined && $scope.data.dataAnnotations.dataAnnotations.length > 0) {
+                if($scope.alldataAnnotations !== undefined && $scope.alldataAnnotations.length > 0) {
                     //nothing has changed, use existing data
                     //$scope.current = $scope.data.dataAnnotations.dataAnnotations;
                 }
@@ -258,8 +265,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                     // dataSources is empty, make calls to the ServiceFactory
                     measurementAPI.getDataAnnotations($scope.getSelectedDataProvider(),$scope.getSelectedDataSource())
                         .then(function(response) {
-                            $scope.data.dataAnnotations = response.data;
-                            $scope.current = $scope.data.dataAnnotations.dataAnnotations;
+                            response.forEach(function(d) {
+                                $scope.alldataAnnotations.push(d.data);
+                            });
                         });
                 }
                 //$scope.data.dataAnnotations = $scope.data.dataAnnotations ? $scope.data.dataAnnotations : measurementAPI.getDataAnnotations();
@@ -283,8 +291,6 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 //$scope.data.dataAnnotations = $scope.data.dataAnnotations ? $scope.data.dataAnnotations : measurementAPI.getDataAnnotations();
                 //$scope.data.dataMeasurements = $scope.data.dataMeasurements ? $scope.data.dataMeasurements : measurementAPI.getMeasurements();
                 //$scope.current = $scope.data.dataMeasurements.dataMeasurements;
-
-                console.log($scope);
                 break;
             case 'dataMeasurementsShow':
                 //$scope.current = $scope.data.selection.measurements;
@@ -307,7 +313,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     };
 
     $scope.getSelectedDataSource = function() {
-        return $scope.selection.dataSources[0];
+        return $scope.selection.dataSources;
     };
 
     $scope.$watch(function() {return $scope.data.mFilter}, function(oldVal, newVal) {
@@ -345,8 +351,6 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.data.selection.measurements.splice(tDM.indexOf(m), 1);
             }
         });
-
-        console.log($scope);
     };
 
 

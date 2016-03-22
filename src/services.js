@@ -112,18 +112,31 @@ mServices.factory('measurementAPI', function($http, $q) {
 
     service.getDataAnnotations = function(dataProvider, dataSource) {
 
-        var ds_url = dataProvider.url + '/annotations/' + dataSource.name;
-
-        //TODO: use the url, use the data source param and append it the url!
+        //var ds_url = dataProvider.url + '/annotations/' + dataSource.name;
 
         var deferred = $q.defer();
+        var annotations = [];
+        var reqs = [];
 
-        $http({
+        angular.forEach(dataSource, function(ds) {
+            var ds_url = dataProvider.url + '/annotations/' + ds.name;
+            reqs.push($http({
+                method: 'GET',
+                url: ds_url
+                })
+            );
+        });
+
+        $q.all(reqs).then(function(response) {
+            //console.log(response);
+            deferred.resolve(response);
+        });
+/*        $http({
             method: 'GET',
             url: ds_url
          }).then(function(response) {
             deferred.resolve(response);
-         });
+         });*/
 
          return deferred.promise;
 
