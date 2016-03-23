@@ -115,7 +115,6 @@ mServices.factory('measurementAPI', function($http, $q) {
         //var ds_url = dataProvider.url + '/annotations/' + dataSource.name;
 
         var deferred = $q.defer();
-        var annotations = [];
         var reqs = [];
 
         angular.forEach(dataSource, function(ds) {
@@ -175,9 +174,12 @@ mServices.factory('measurementAPI', function($http, $q) {
 
     };
 
-    service.getMeasurements = function(dataProvider, dataSource, filters) {
+    service.getMeasurements = function(dataProvider, filters) {
 
-        var ds_url = dataProvider.url + '/measurements/' + dataSource.name;
+        //var ds_url = dataProvider.url + '/measurements/' + dataSource.name;
+
+        var reqs = [];
+        var filts = {};
 
         //TEST FILTERS
 /*        filters = [
@@ -188,7 +190,38 @@ mServices.factory('measurementAPI', function($http, $q) {
 
         var deferred = $q.defer();
 
-        $http({
+        angular.forEach(filters, function(filt) {
+            if (filts[filt.dataSource] == null) {
+                filts[filt.dataSource] = [];
+            }
+
+            filts[filt.dataSource].push({filterField:filt.filterField, filterOperator:filt.filterOperator, filterValue:filt.filterValue})
+        });
+
+        for( var key in filts) {
+            var ds_url = dataProvider.url + '/measurements/' + key;
+            reqs.push(
+                $http({
+                    method: 'POST',
+                    url: ds_url,
+                    data: {
+                        pageSize: 10,
+                        filter : filts[key]
+                    }
+                })
+            );
+        }
+
+        console.log(reqs);
+
+        $q.all(reqs).then(function(response) {
+            console.log(response);
+            deferred.resolve(response);
+
+            //TODO: concatenate all measurements from different data sources
+        });
+
+/*        $http({
             method: 'POST',
             url: ds_url,
             data: {
@@ -199,7 +232,7 @@ mServices.factory('measurementAPI', function($http, $q) {
             deferred.resolve(response);
          }, function(error) {
             //TODO: ERROR CALLING WEBSERVICE
-        });
+        });*/
 
          return deferred.promise;
 

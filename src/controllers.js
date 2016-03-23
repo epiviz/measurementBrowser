@@ -69,6 +69,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     };
 
     $scope.alldataAnnotations = [];
+    $scope.alldSNames = "";
 
 
     // for query builder
@@ -282,10 +283,15 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
-                    measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.getSelectedDataSource(), $scope.fqBuilder)
+                    measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.fqBuilder)
                         .then(function(response) {
-                            $scope.data.dataMeasurements = response.data;
-                            $scope.current = $scope.data.dataMeasurements.dataMeasurements;
+                            response.forEach(function(d){
+                                if($scope.data.dataMeasurements.dataMeasurements == null) {
+                                    $scope.data.dataMeasurements.dataMeasurements = [];
+                                }
+                                $scope.data.dataMeasurements.dataMeasurements.push(d.data.dataMeasurements);
+                            });
+                            //$scope.current = $scope.data.dataMeasurements.dataMeasurements;
                         });
                 }
                 //$scope.data.dataAnnotations = $scope.data.dataAnnotations ? $scope.data.dataAnnotations : measurementAPI.getDataAnnotations();
@@ -364,15 +370,16 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             case 'dataProviders':
                 tabSelection = $scope.selection.dataProviders;
                 $scope.data.dataSources = {};
-                $scope.data.dataAnnotations = {};
+                $scope.alldataAnnotations = [];
                 $scope.data.dataMeasurements = {};
-                $scope.data.mFilter = [];
+                $scope.fqBuilder = [];
                 break;
             case 'dataSources':
                 tabSelection = $scope.selection.dataSources;
-                $scope.data.dataAnnotations = {};
+                $scope.alldataAnnotations = [];
                 $scope.data.dataMeasurements = {};
-                $scope.data.mFilter = [];
+                $scope.fqBuilder = [];
+                $scope.alldSNames = $scope.selection.dataSources.map(function(n) {return n.name}).join(',');
                 break;
             case 'dataMeasurements':
                 tabSelection = $scope.selection.dataMeasurements;
