@@ -174,12 +174,13 @@ mServices.factory('measurementAPI', function($http, $q) {
 
     };
 
-    service.getMeasurements = function(dataProvider, filters) {
+    service.getMeasurements = function(dataProvider, dataSources, filters) {
 
         //var ds_url = dataProvider.url + '/measurements/' + dataSource.name;
 
         var reqs = [];
         var filts = {};
+        var keys = [];
 
         //TEST FILTERS
 /*        filters = [
@@ -193,9 +194,16 @@ mServices.factory('measurementAPI', function($http, $q) {
         angular.forEach(filters, function(filt) {
             if (filts[filt.dataSource] == null) {
                 filts[filt.dataSource] = [];
+                keys.push(filt.dataSource);
             }
 
             filts[filt.dataSource].push({filterField:filt.filterField, filterOperator:filt.filterOperator, filterValue:filt.filterValue})
+        });
+
+        angular.forEach(dataSources, function(ds) {
+            if(keys.indexOf(ds.name) == -1) {
+                filts[ds.name] = [];
+            }
         });
 
         for( var key in filts) {

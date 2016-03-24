@@ -159,6 +159,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
         });
     };
 
+
     $scope.loadDataProviders = function() {
 
         //TODO: check for epivizr instance and status!
@@ -283,13 +284,16 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
-                    measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.fqBuilder)
+                    measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.getSelectedDataSource(), $scope.fqBuilder)
                         .then(function(response) {
                             response.forEach(function(d){
                                 if($scope.data.dataMeasurements.dataMeasurements == null) {
                                     $scope.data.dataMeasurements.dataMeasurements = [];
                                 }
-                                $scope.data.dataMeasurements.dataMeasurements.push(d.data.dataMeasurements);
+                                d.data.dataMeasurements.forEach(function(t) {
+                                    t.dataSource = d.data.dataSource;
+                                });
+                                $scope.data.dataMeasurements.dataMeasurements = $scope.data.dataMeasurements.dataMeasurements.concat(d.data.dataMeasurements);
                             });
                             //$scope.current = $scope.data.dataMeasurements.dataMeasurements;
                         });
@@ -341,21 +345,12 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     $scope.addMeasurement = function() {
 
         var tDP = $scope.selection.dataProviders[0].url,
-            tDS = $scope.selection.dataSources[0].name,
-            tDM = [];
+            tDS = "";
 
-        $scope.data.selection.measurements.forEach(function(m) {
-            tDM.push(m);
-        });
+        $scope.data.selection.measurements = [];
 
         $scope.selection.dataMeasurements.forEach(function(m) {
-
-            if(tDM.indexOf(m) == -1) {
-                $scope.data.selection.measurements.push({'dataProvider': tDP, 'dataSource':tDS, 'measurement':m});
-            }
-            else {
-                $scope.data.selection.measurements.splice(tDM.indexOf(m), 1);
-            }
+            $scope.data.selection.measurements.push({'dataProvider': tDP, 'dataSource': m.dataSource, 'measurement':m});
         });
     };
 
