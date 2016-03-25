@@ -108,7 +108,7 @@ mServices.factory('measurementAPI', function($http, $q) {
         var reqs = [];
 
         angular.forEach(dataSource, function(ds) {
-            var ds_url = dataProvider.url + '/annotations/' + ds.name;
+            var ds_url = dataProvider[0].url + '/annotations/' + ds.name;
             reqs.push($http({
                 method: 'GET',
                 url: ds_url
@@ -197,7 +197,7 @@ mServices.factory('measurementAPI', function($http, $q) {
         });
 
         for( var key in filts) {
-            var ds_url = dataProvider.url + '/measurements/' + key;
+            var ds_url = dataProvider[0].url + '/measurements/' + key;
             reqs.push(
                 $http({
                     method: 'POST',
