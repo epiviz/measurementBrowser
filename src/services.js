@@ -9,42 +9,32 @@ mServices.factory('measurementAPI', function($http, $q) {
 
     var service = {};
 
-    service.getDataProviders = function() {
-
-        //TODO : Use UI to let user add data Providers.
-        // Query localhost for dataproviders. epivizr ? metavizr ? etc
-
-        return {
-            "dataProviders": []
-        };
-
-/*        return {
-            "dataProviders": [{
-                "serverType": 'MySQL',
-                "serverName": 'EpivizUMD',
-                "url": 'http://epiviz.cbcb.umd.edu',
-                "version": '1'
-            }, {
-                "serverType": 'MySQL',
-                "serverName": 'MetavizUMD',
-                "url": 'http://metaviz.cbcb.umd.edu',
-                "version": '1'
-            }]
-        }*/
-    };
-
     service.getDataSources = function(dataProvider) {
 
-        var ds_url = dataProvider.url + '/dataSources';
+        //var ds_url = dataProvider.url + '/dataSources';
 
         var deferred = $q.defer();
+        var reqs = [];
 
-        $http({
+        angular.forEach(dataProvider, function(dp) {
+            var dp_url = dp.url + '/dataSources/';
+            reqs.push($http({
+                    method: 'GET',
+                    url: dp_url
+                })
+            );
+        });
+
+        $q.all(reqs).then(function(response) {
+            deferred.resolve(response);
+        });
+
+/*        $http({
             method: 'GET',
             url: ds_url
         }).then(function(response) {
             deferred.resolve(response);
-        });
+        });*/
 
          return deferred.promise;
 
@@ -174,7 +164,7 @@ mServices.factory('measurementAPI', function($http, $q) {
 
     };
 
-    service.getMeasurements = function(dataProvider, dataSources, filters) {
+    service.getMeasurements = function(dataProvider, dataSources, filters, pageSize, offset) {
 
         //var ds_url = dataProvider.url + '/measurements/' + dataSource.name;
 
@@ -213,7 +203,8 @@ mServices.factory('measurementAPI', function($http, $q) {
                     method: 'POST',
                     url: ds_url,
                     data: {
-                        pageSize: 10,
+                        pageSize: pageSize,
+                        offset: offset,
                         filter : filts[key]
                     }
                 })

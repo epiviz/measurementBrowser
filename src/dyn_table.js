@@ -3,7 +3,7 @@
  * Date: 3/8/2016
  */
 
-var mTable = angular.module('dynamicTable', []);
+var mTable = angular.module('dynamicTable', ['infinite-scroll']);
 
 mTable.directive('dyntable', function() {
     return {
@@ -14,7 +14,7 @@ mTable.directive('dyntable', function() {
         '<div ng-if="dataReceived == true">' +
         '<form class="form-inline">' +
         '<div class="form-group">' +
-        '<div class="input-group">' +
+        '<div class="input-group pull-right">' +
         '<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>' +
         '<input type="search" class="form-control" placeholder="Search table" ng-model="searchTable">' +
         '</div>' +
@@ -41,7 +41,8 @@ mTable.directive('dyntable', function() {
         '<button type="button" class="close" aria-label="Close" ng-click="removeFilter($index)"><span aria-hidden="true">&times;</span></button>' +
         '</li>' +
         '</ul>' +
-        '<div class="table-responsive">' +
+        '<div >' +
+        '<div class="tbContent" style="height: 300px;overflow: auto" infinite-scroll="loadMore()" inifnite-scroll-container="tbContent">' +
         '<table class="table table-hover">' +
         '<thead>' +
         '<tr>' +
@@ -58,6 +59,8 @@ mTable.directive('dyntable', function() {
         '</tr>' +
         '</tbody>' +
         '</table>' +
+        '<div style="clear: both;"></div>' +
+        '</div>' +
         '</div>' +
         '</div>' +
         '<div ng-if="dataReceived == false"> No data received!! </div>' +
@@ -68,7 +71,8 @@ mTable.directive('dyntable', function() {
             selectionType: '@selectiontype',
             selectedRows: '=selectedrows',
             dataAnnotations: '=annotations',
-            selection: '=selection'
+            selection: '=selection',
+            callbackFn: '&callbackfn'
         },
         controller: function($scope) {
 
@@ -173,6 +177,10 @@ mTable.directive('dyntable', function() {
                     scope.showFilterMenu = false;
                 }
             }, true);
+
+            scope.loadMore = function() {
+                scope.callbackFn();
+            }
         }
     }
 });

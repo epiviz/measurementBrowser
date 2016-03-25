@@ -38,6 +38,10 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     //current scope of the tab and table
     $scope.current = {};
 
+    $scope.pageSize = 10;
+    $scope.offset = 0;
+    $scope.totalRecords = 0;
+
     //for filtering on measurements
     $scope.data.mFilter = [];
 
@@ -70,7 +74,6 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     $scope.alldataAnnotations = [];
     $scope.alldSNames = "";
-
 
     // for query builder
     $scope.fqBuilder = [];
@@ -224,7 +227,32 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
 
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
-        //TODO: before closing modal, get current list of data providers and save it
+    };
+
+    $scope.loadMore = function() {
+        var id = $scope.tabs[$scope.active - 1].id;
+
+        $scope.offset = $scope.offset + $scope.pageSize;
+
+        switch(id) {
+            case 'dataMeasurements':
+                if($scope.data.dataMeasurements.dataMeasurements.length <= $scope.totalRecords) {
+                    // dataSources is empty, make calls to the ServiceFactory
+                    measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.getSelectedDataSource(), $scope.fqBuilder, $scope.pageSize, $scope.offset)
+                        .then(function(response) {
+                            response.forEach(function(d){
+                                if($scope.data.dataMeasurements.dataMeasurements == null) {
+                                    $scope.data.dataMeasurements.dataMeasurements = [];
+                                }
+                                d.data.dataMeasurements.forEach(function(t) {
+                                    t.dataSource = d.data.dataSource;
+                                });
+                                $scope.data.dataMeasurements.dataMeasurements = $scope.data.dataMeasurements.dataMeasurements.concat(d.data.dataMeasurements);
+                            });
+                        });
+                }
+                break;
+        }
     };
 
     $scope.loadContent = function(filter) {
@@ -246,7 +274,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                     // dataSources is empty, make calls to the ServiceFactory
                     measurementAPI.getDataSources($scope.getSelectedDataProvider())
                         .then(function(response) {
-                            $scope.data.dataSources = response.data;
+                            $scope.data.dataSources = response[0].data;
                             $scope.current = $scope.data.dataSources.dataSources;
                         }, function(error) {
                             //something wrong with webservices
@@ -284,7 +312,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 }
                 else {
                     // dataSources is empty, make calls to the ServiceFactory
-                    measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.getSelectedDataSource(), $scope.fqBuilder)
+                    measurementAPI.getMeasurements($scope.getSelectedDataProvider(), $scope.getSelectedDataSource(), $scope.fqBuilder, $scope.pageSize, $scope.offset)
                         .then(function(response) {
                             response.forEach(function(d){
                                 if($scope.data.dataMeasurements.dataMeasurements == null) {
@@ -293,6 +321,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                                 d.data.dataMeasurements.forEach(function(t) {
                                     t.dataSource = d.data.dataSource;
                                 });
+                                $scope.totalRecords += d.data.totalCount;
                                 $scope.data.dataMeasurements.dataMeasurements = $scope.data.dataMeasurements.dataMeasurements.concat(d.data.dataMeasurements);
                             });
                             //$scope.current = $scope.data.dataMeasurements.dataMeasurements;
@@ -319,7 +348,7 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
     };
 
     $scope.getSelectedDataProvider = function() {
-        return $scope.selection.dataProviders[0];
+        return $scope.selection.dataProviders;
     };
 
     $scope.getSelectedDataSource = function() {
@@ -353,6 +382,24 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
             $scope.data.selection.measurements.push({'dataProvider': tDP, 'dataSource': m.dataSource, 'measurement':m});
         });
     };
+/*
+    $scope.addDataProviderSel = function(tabSelection) {
+
+        $scope.selection2.dataProviders = [];
+
+        tabSelection.forEach(function(ts) {
+            $scope.selection2.dataProviders.push(ts);
+        });
+    };
+
+    $scope.addDataSourceSel = function(tabSelection) {
+
+        $scope.selection2.dataProviders = [];
+
+        tabSelection.forEach(function(ts) {
+            $scope.selection2.dataProviders.push(ts);
+        });
+    };*/
 
 
     $scope.$watch(function() { return $scope.selection}, function(oldVal, newVal) {
@@ -368,6 +415,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.alldataAnnotations = [];
                 $scope.data.dataMeasurements = {};
                 $scope.fqBuilder = [];
+                $scope.pageSize = 10;
+                $scope.offset = 0;
+                //$scope.addDataProviderSel(tabSelection);
                 break;
             case 'dataSources':
                 tabSelection = $scope.selection.dataSources;
@@ -375,6 +425,9 @@ mControllers.controller('modalInstanceCtrl', function($scope, $uibModalInstance,
                 $scope.data.dataMeasurements = {};
                 $scope.fqBuilder = [];
                 $scope.alldSNames = $scope.selection.dataSources.map(function(n) {return n.name}).join(',');
+                $scope.pageSize = 10;
+                $scope.offset = 0;
+                //$scope.addDataSourceSel();
                 break;
             case 'dataMeasurements':
                 tabSelection = $scope.selection.dataMeasurements;
