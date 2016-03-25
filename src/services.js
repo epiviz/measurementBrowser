@@ -17,7 +17,7 @@ mServices.factory('measurementAPI', function($http, $q) {
         var reqs = [];
 
         angular.forEach(dataProvider, function(dp) {
-            var dp_url = dp.url + '/dataSources/';
+            var dp_url = dp.url + '/dataSources';
             reqs.push($http({
                     method: 'GET',
                     url: dp_url
