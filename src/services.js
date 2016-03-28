@@ -204,7 +204,7 @@ mServices.factory('measurementAPI', function($http, $q) {
                     url: ds_url,
                     data: {
                         pageSize: pageSize,
-                        offset: offset,
+                        pageOffset: offset,
                         filter : filts[key]
                     }
                 })
